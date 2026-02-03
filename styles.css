@@ -177,6 +177,41 @@ button {
   color: var(--muted);
 }
 
+.option-group {
+  margin-top: 18px;
+  background: #f7f3ff;
+  border-radius: 16px;
+  padding: 14px 16px;
+}
+
+.option-title {
+  display: block;
+  font-size: 0.85rem;
+  color: var(--muted);
+  margin-bottom: 10px;
+}
+
+.option-buttons {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.option-button {
+  border: 1px solid #d8d0f4;
+  background: white;
+  color: var(--text);
+  padding: 8px 16px;
+  border-radius: 999px;
+  font-weight: 600;
+}
+
+.option-button.is-active {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: white;
+}
+
 .columns {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
