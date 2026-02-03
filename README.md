@@ -9,7 +9,7 @@
 1. ルートディレクトリで簡易サーバーを起動します。
 
    ```bash
-   python -m http.server 8000
+   python server.py
    ```
 
 2. ブラウザで以下にアクセスします。
