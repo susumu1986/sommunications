@@ -119,6 +119,47 @@
       </section>
 
       <section class="section alt">
+        <div class="avatar-section">
+          <div>
+            <h2>AIアバターで会話の表情を体感</h2>
+            <p class="section-lead">
+              Lottieアニメーションで、女性・男性の表情や会話のニュアンスを視覚的に確認できます。練習テーマに合わせて
+              アバターの表情が変化し、実際のコミュニケーションをイメージしやすくなります。
+            </p>
+          </div>
+          <div class="avatar-grid">
+            <article class="card avatar-card">
+              <div
+                class="avatar-animation"
+                data-src="https://assets2.lottiefiles.com/packages/lf20_1pxqjqps.json"
+                aria-label="女性アバター"
+              ></div>
+              <h3>女性アバター</h3>
+              <p>やわらかな表情とリアクションで、会話の流れをつかめます。</p>
+            </article>
+            <article class="card avatar-card">
+              <div
+                class="avatar-animation"
+                data-src="https://assets10.lottiefiles.com/packages/lf20_touohxv0.json"
+                aria-label="男性アバター"
+              ></div>
+              <h3>男性アバター</h3>
+              <p>落ち着いた表情の変化をチェックして、安心感ある会話を練習。</p>
+            </article>
+            <article class="card avatar-card">
+              <div
+                class="avatar-animation"
+                data-src="https://assets6.lottiefiles.com/packages/lf20_jcikwtux.json"
+                aria-label="会話中の表情"
+              ></div>
+              <h3>会話中の表情</h3>
+              <p>相手の反応を見ながら、会話のテンポと感情表現を磨きます。</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section alt">
         <div class="columns">
           <div>
             <h2>学習ステップ</h2>
@@ -178,5 +219,24 @@
         <a href="#">お問い合わせ</a>
       </div>
     </footer>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.12.2/lottie.min.js"></script>
+    <script>
+      window.addEventListener("DOMContentLoaded", () => {
+        const targets = document.querySelectorAll(".avatar-animation");
+        targets.forEach((target) => {
+          const src = target.dataset.src;
+          if (!src || !window.lottie) {
+            return;
+          }
+          window.lottie.loadAnimation({
+            container: target,
+            renderer: "svg",
+            loop: true,
+            autoplay: true,
+            path: src,
+          });
+        });
+      });
+    </script>
   </body>
 </html>
