@@ -136,6 +136,10 @@ button {
   box-shadow: 0 10px 30px rgba(63, 38, 135, 0.1);
 }
 
+.full-width {
+  width: 100%;
+}
+
 .hero-card ul {
   list-style: none;
   margin: 16px 0 24px;
@@ -196,6 +200,74 @@ button {
 
 .avatar-card p {
   color: var(--muted);
+}
+
+.practice-section {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 32px;
+  align-items: start;
+}
+
+.practice-highlights {
+  margin-top: 20px;
+  padding-left: 20px;
+  color: var(--muted);
+  display: grid;
+  gap: 12px;
+}
+
+.practice-card {
+  display: grid;
+  gap: 16px;
+}
+
+.input-toggle {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.toggle-button {
+  border: 1px solid #d8d0f4;
+  background: white;
+  color: var(--text);
+  padding: 8px 18px;
+  border-radius: 999px;
+  font-weight: 600;
+}
+
+.toggle-button.is-active {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: white;
+}
+
+.input-label {
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+.practice-input {
+  border: 1px solid #d8d0f4;
+  border-radius: 16px;
+  padding: 12px 14px;
+  font: inherit;
+  min-height: 120px;
+  resize: vertical;
+}
+
+.ai-response {
+  background: #f7f3ff;
+  border-radius: 16px;
+  padding: 16px;
+  color: var(--muted);
+}
+
+.response-title {
+  color: var(--text);
+  font-weight: 700;
+  margin-bottom: 8px;
 }
 
 .feature-grid {
