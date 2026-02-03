@@ -230,6 +230,12 @@ button {
   flex-wrap: wrap;
 }
 
+.option-note {
+  margin-top: 12px;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+
 .option-button {
   border: 1px solid #d8d0f4;
   background: white;
