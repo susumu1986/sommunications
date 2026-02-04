@@ -221,6 +221,30 @@
           <div class="card practice-card">
             <h3>AIとの対話シミュレーション</h3>
             <div class="input-toggle">
+              <button class="toggle-button is-active" type="button" data-training-gender="female">女性</button>
+              <button class="toggle-button" type="button" data-training-gender="male">男性</button>
+            </div>
+            <div class="scenario-selector" data-scenario-group>
+              <p class="scenario-title">シナリオを選択</p>
+              <div class="option-buttons">
+                <button class="option-button is-active" type="button" data-scenario="first-meet">
+                  初対面
+                </button>
+                <button class="option-button" type="button" data-scenario="reunion">
+                  久しぶりの再会
+                </button>
+                <button class="option-button" type="button" data-scenario="confession">
+                  好意を伝える
+                </button>
+                <button class="option-button" type="button" data-scenario="silence">
+                  気まずい沈黙
+                </button>
+              </div>
+            </div>
+            <p class="scenario-note" data-scenario-text>
+              初対面のぎこちなさをほぐすため、相手が安心できる質問から会話を始めましょう。
+            </p>
+            <div class="input-toggle">
               <button class="toggle-button is-active" type="button">テキスト入力</button>
               <button class="toggle-button" type="button">音声入力</button>
             </div>
@@ -233,7 +257,7 @@
             <button class="primary full-width" type="button">AIに相談する</button>
             <div class="ai-response">
               <p class="response-title">AIからの返答例</p>
-              <p>
+              <p data-scenario-response>
                 「緊張を和らげるために、共通点を探す質問から始めましょう。相手の趣味を聞いたあとに、あなたの体験談を
                 重ねると会話が自然に続きます。」
               </p>
@@ -373,6 +397,106 @@
             setGender(activeButton.dataset.gender);
           }
         });
+
+        const trainingCopy = {
+          female: {
+            "first-meet": {
+              note:
+                "初対面のぎこちなさをほぐすため、相手が安心できる質問から会話を始めましょう。",
+              response:
+                "「最初は相手が話しやすい軽い質問から入りましょう。趣味や最近ハマっていることを聞いて、共通点があれば自然に話題を広げられます。」",
+            },
+            reunion: {
+              note:
+                "久しぶりの再会では、相手の近況を丁寧に聞きながら思い出話を織り交ぜます。",
+              response:
+                "「最近どうしてた？と近況を聞いたあとに、前に話していたことを覚えていると伝えると安心感が生まれます。」",
+            },
+            confession: {
+              note:
+                "好意を伝える場面では、相手の気持ちに配慮しつつ素直な言葉で伝えましょう。",
+              response:
+                "「あなたと話すと落ち着くし、もっと一緒に過ごしたいと思っています。急がずに気持ちを聞かせてもらえたら嬉しいです。」",
+            },
+            silence: {
+              note:
+                "気まずい沈黙は、相手が安心できる話題に戻してテンポを整えましょう。",
+              response:
+                "「沈黙が続いたら、相手が答えやすい質問を一つ挟みます。最近の楽しみを聞くと自然に会話が戻ります。」",
+            },
+          },
+          male: {
+            "first-meet": {
+              note:
+                "初対面では要点が伝わる質問とリアクションを意識し、安心感を作ります。",
+              response:
+                "「会話の入り口はシンプルに。相手の関心を聞いたら、具体的に反応して話題を深めると心地よいテンポになります。」",
+            },
+            reunion: {
+              note:
+                "久しぶりの再会では、変化に気づいた点を伝えて距離を縮めます。",
+              response:
+                "「久しぶりだね、雰囲気が変わったねとポジティブに伝えると会話がスムーズに始まります。」",
+            },
+            confession: {
+              note:
+                "好意を伝えるときは、具体的なエピソードを添えて誠実さを示しましょう。",
+              response:
+                "「一緒に過ごす時間が楽しくて、もっと仲良くなりたいと思いました。あなたはどう感じていますか？」",
+            },
+            silence: {
+              note:
+                "気まずい沈黙は、会話の目的を示してテンポを整えると安心感が生まれます。",
+              response:
+                "「沈黙のときは、今の流れを軽く整理して話題を変えると自然です。『ところで最近は？』と切り替えましょう。」",
+            },
+          },
+        };
+
+        const practiceCard = document.querySelector(".practice-card");
+        if (practiceCard) {
+          const genderButtons = practiceCard.querySelectorAll("[data-training-gender]");
+          const scenarioButtons = practiceCard.querySelectorAll("[data-scenario]");
+          const scenarioText = practiceCard.querySelector("[data-scenario-text]");
+          const scenarioResponse = practiceCard.querySelector("[data-scenario-response]");
+
+          const updateTraining = () => {
+            const activeGender =
+              practiceCard.querySelector("[data-training-gender].is-active")?.dataset
+                .trainingGender ?? "female";
+            const activeScenario =
+              practiceCard.querySelector("[data-scenario].is-active")?.dataset.scenario ??
+              "first-meet";
+            const copy = trainingCopy?.[activeGender]?.[activeScenario];
+            if (!copy) {
+              return;
+            }
+            if (scenarioText) {
+              scenarioText.textContent = copy.note;
+            }
+            if (scenarioResponse) {
+              scenarioResponse.textContent = copy.response;
+            }
+          };
+
+          genderButtons.forEach((button) => {
+            button.addEventListener("click", () => {
+              genderButtons.forEach((item) => item.classList.remove("is-active"));
+              button.classList.add("is-active");
+              updateTraining();
+            });
+          });
+
+          scenarioButtons.forEach((button) => {
+            button.addEventListener("click", () => {
+              scenarioButtons.forEach((item) => item.classList.remove("is-active"));
+              button.classList.add("is-active");
+              updateTraining();
+            });
+          });
+
+          updateTraining();
+        }
       });
     </script>
   </body>
