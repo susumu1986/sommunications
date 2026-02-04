@@ -270,6 +270,32 @@
                 「緊張を和らげるために、共通点を探す質問から始めましょう。相手の趣味を聞いたあとに、あなたの体験談を
                 重ねると会話が自然に続きます。」
               </p>
+              <div class="feedback-card" data-feedback>
+                <p class="response-title">評価と改善ポイント</p>
+                <div class="feedback-grid">
+                  <div>
+                    <p class="feedback-label">共感度</p>
+                    <p class="feedback-score" data-feedback-score="empathy">4.6</p>
+                  </div>
+                  <div>
+                    <p class="feedback-label">具体性</p>
+                    <p class="feedback-score" data-feedback-score="specificity">4.4</p>
+                  </div>
+                  <div>
+                    <p class="feedback-label">安心感</p>
+                    <p class="feedback-score" data-feedback-score="comfort">4.5</p>
+                  </div>
+                  <div>
+                    <p class="feedback-label">会話テンポ</p>
+                    <p class="feedback-score" data-feedback-score="tempo">4.3</p>
+                  </div>
+                </div>
+                <ul class="feedback-tips" data-feedback-tips>
+                  <li>最初の質問は相手の答えやすい話題を選ぶと安心感が高まります。</li>
+                  <li>自分の体験談を短く添えることで、共通点を見つけやすくなります。</li>
+                  <li>相手が答えたら一度共感の一言を挟むと会話のテンポが整います。</li>
+                </ul>
+              </div>
             </div>
           </div>
         </div>
@@ -415,6 +441,19 @@
               response:
                 "「最初は相手が話しやすい軽い質問から入りましょう。趣味や最近ハマっていることを聞いて、共通点があれば自然に話題を広げられます。」",
               mood: "positive",
+              feedback: {
+                scores: {
+                  empathy: 4.6,
+                  specificity: 4.4,
+                  comfort: 4.5,
+                  tempo: 4.3,
+                },
+                tips: [
+                  "最初の質問は相手の答えやすい話題を選ぶと安心感が高まります。",
+                  "自分の体験談を短く添えることで、共通点を見つけやすくなります。",
+                  "相手が答えたら一度共感の一言を挟むと会話のテンポが整います。",
+                ],
+              },
             },
             reunion: {
               note:
@@ -422,6 +461,19 @@
               response:
                 "「最近どうしてた？と近況を聞いたあとに、前に話していたことを覚えていると伝えると安心感が生まれます。」",
               mood: "positive",
+              feedback: {
+                scores: {
+                  empathy: 4.5,
+                  specificity: 4.2,
+                  comfort: 4.6,
+                  tempo: 4.1,
+                },
+                tips: [
+                  "再会時は相手の変化に気づいた点を伝えると距離が縮まります。",
+                  "思い出話は一言添える程度にして、相手の近況を優先しましょう。",
+                  "質問のあとに短い相づちを入れて会話のリズムを整えます。",
+                ],
+              },
             },
             confession: {
               note:
@@ -429,6 +481,19 @@
               response:
                 "「あなたと話すと落ち着くし、もっと一緒に過ごしたいと思っています。急がずに気持ちを聞かせてもらえたら嬉しいです。」",
               mood: "thoughtful",
+              feedback: {
+                scores: {
+                  empathy: 4.7,
+                  specificity: 4.1,
+                  comfort: 4.3,
+                  tempo: 4.0,
+                },
+                tips: [
+                  "相手のペースに配慮する言葉を添えると安心感が増します。",
+                  "好意を伝えた理由を短い具体例で補足すると説得力が上がります。",
+                  "相手が返しやすい問いかけで会話の余白を残しましょう。",
+                ],
+              },
             },
             silence: {
               note:
@@ -436,6 +501,19 @@
               response:
                 "「沈黙が続いたら、相手が答えやすい質問を一つ挟みます。最近の楽しみを聞くと自然に会話が戻ります。」",
               mood: "neutral",
+              feedback: {
+                scores: {
+                  empathy: 4.2,
+                  specificity: 4.3,
+                  comfort: 4.4,
+                  tempo: 4.5,
+                },
+                tips: [
+                  "沈黙が続いたら、軽い話題に切り替えて空気を和らげます。",
+                  "答えやすい質問を一つに絞るとテンポが戻りやすくなります。",
+                  "相手の反応を受け止める短い共感を挟むと自然です。",
+                ],
+              },
             },
           },
           male: {
@@ -445,6 +523,19 @@
               response:
                 "「会話の入り口はシンプルに。相手の関心を聞いたら、具体的に反応して話題を深めると心地よいテンポになります。」",
               mood: "positive",
+              feedback: {
+                scores: {
+                  empathy: 4.3,
+                  specificity: 4.5,
+                  comfort: 4.4,
+                  tempo: 4.4,
+                },
+                tips: [
+                  "質問の意図を短く伝えると相手が答えやすくなります。",
+                  "相手の回答に具体的なリアクションを返すと会話が広がります。",
+                  "テンポを整えるために合間で相づちを入れましょう。",
+                ],
+              },
             },
             reunion: {
               note:
@@ -452,6 +543,19 @@
               response:
                 "「久しぶりだね、雰囲気が変わったねとポジティブに伝えると会話がスムーズに始まります。」",
               mood: "positive",
+              feedback: {
+                scores: {
+                  empathy: 4.4,
+                  specificity: 4.2,
+                  comfort: 4.5,
+                  tempo: 4.2,
+                },
+                tips: [
+                  "相手の変化に触れるときは肯定的な言葉を選びましょう。",
+                  "近況を聞いたら、相手が話しやすい質問を一つ添えます。",
+                  "懐かしい話題は短くまとめて相手の反応を待ちます。",
+                ],
+              },
             },
             confession: {
               note:
@@ -459,6 +563,19 @@
               response:
                 "「一緒に過ごす時間が楽しくて、もっと仲良くなりたいと思いました。あなたはどう感じていますか？」",
               mood: "thoughtful",
+              feedback: {
+                scores: {
+                  empathy: 4.6,
+                  specificity: 4.2,
+                  comfort: 4.3,
+                  tempo: 4.1,
+                },
+                tips: [
+                  "相手の返答を急がせない言い回しを添えると安心感が増します。",
+                  "具体的な出来事を一つ入れると誠実さが伝わります。",
+                  "最後に相手へ問いかけを入れて会話の余白を残しましょう。",
+                ],
+              },
             },
             silence: {
               note:
@@ -466,6 +583,19 @@
               response:
                 "「沈黙のときは、今の流れを軽く整理して話題を変えると自然です。『ところで最近は？』と切り替えましょう。」",
               mood: "neutral",
+              feedback: {
+                scores: {
+                  empathy: 4.1,
+                  specificity: 4.4,
+                  comfort: 4.3,
+                  tempo: 4.5,
+                },
+                tips: [
+                  "話題転換は短く区切って、相手が答えやすい質問にします。",
+                  "要点を整理した一言があると会話のテンポが戻ります。",
+                  "相手の返答に合わせて次の質問量を調整しましょう。",
+                ],
+              },
             },
           },
         };
@@ -476,6 +606,14 @@
           const scenarioButtons = practiceCard.querySelectorAll("[data-scenario]");
           const scenarioText = practiceCard.querySelector("[data-scenario-text]");
           const scenarioResponse = practiceCard.querySelector("[data-scenario-response]");
+          const feedbackCard = practiceCard.querySelector("[data-feedback]");
+          const feedbackScores = {
+            empathy: practiceCard.querySelector("[data-feedback-score=\"empathy\"]"),
+            specificity: practiceCard.querySelector("[data-feedback-score=\"specificity\"]"),
+            comfort: practiceCard.querySelector("[data-feedback-score=\"comfort\"]"),
+            tempo: practiceCard.querySelector("[data-feedback-score=\"tempo\"]"),
+          };
+          const feedbackTips = practiceCard.querySelector("[data-feedback-tips]");
           const voiceToggle = practiceCard.querySelector("[data-voice-toggle]");
           const voiceStatus = practiceCard.querySelector("[data-voice-status]");
           const practiceInput = practiceCard.querySelector("#practice-text");
@@ -504,6 +642,22 @@
             }
             if (scenarioResponse) {
               scenarioResponse.textContent = copy.response;
+            }
+            if (feedbackCard && copy.feedback) {
+              Object.entries(copy.feedback.scores).forEach(([key, value]) => {
+                const target = feedbackScores[key];
+                if (target) {
+                  target.textContent = value.toFixed(1);
+                }
+              });
+              if (feedbackTips) {
+                feedbackTips.innerHTML = "";
+                copy.feedback.tips.forEach((tip) => {
+                  const item = document.createElement("li");
+                  item.textContent = tip;
+                  feedbackTips.appendChild(item);
+                });
+              }
             }
 
             const avatars = document.querySelectorAll("[data-avatar]");

@@ -312,6 +312,41 @@ button {
   color: var(--muted);
 }
 
+.feedback-card {
+  margin-top: 16px;
+  background: white;
+  border-radius: 16px;
+  padding: 16px;
+  display: grid;
+  gap: 12px;
+}
+
+.feedback-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 12px;
+}
+
+.feedback-label {
+  font-size: 0.8rem;
+  color: var(--muted);
+  margin-bottom: 4px;
+}
+
+.feedback-score {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.feedback-tips {
+  margin: 0;
+  padding-left: 18px;
+  color: var(--muted);
+  display: grid;
+  gap: 6px;
+}
+
 .response-title {
   color: var(--text);
   font-weight: 700;
