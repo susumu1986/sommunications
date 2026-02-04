@@ -254,6 +254,24 @@ button {
   color: var(--muted);
 }
 
+.tone-card {
+  background: #f1ecff;
+  border-radius: 16px;
+  padding: 16px;
+  display: grid;
+  gap: 12px;
+}
+
+.tone-card.is-disabled {
+  opacity: 0.6;
+}
+
+.tone-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 12px;
+}
+
 .scenario-selector {
   display: grid;
   gap: 10px;

@@ -252,6 +252,26 @@
               <button class="toggle-button" type="button" data-voice-toggle>音声入力</button>
             </div>
             <p class="voice-status" data-voice-status>音声入力: 未開始</p>
+            <div class="tone-card" data-tone-card>
+              <p class="response-title">音声トーン評価</p>
+              <div class="tone-grid">
+                <div>
+                  <p class="feedback-label">スピード</p>
+                  <p class="feedback-score" data-tone-score="speed">-</p>
+                </div>
+                <div>
+                  <p class="feedback-label">抑揚</p>
+                  <p class="feedback-score" data-tone-score="intonation">-</p>
+                </div>
+                <div>
+                  <p class="feedback-label">間</p>
+                  <p class="feedback-score" data-tone-score="pause">-</p>
+                </div>
+              </div>
+              <ul class="feedback-tips" data-tone-tips>
+                <li>音声入力を行うとスピード・抑揚・間の目安を表示します。</li>
+              </ul>
+            </div>
             <label class="input-label" for="practice-text">会話したい内容を入力</label>
             <textarea
               id="practice-text"
@@ -614,6 +634,13 @@
             tempo: practiceCard.querySelector("[data-feedback-score=\"tempo\"]"),
           };
           const feedbackTips = practiceCard.querySelector("[data-feedback-tips]");
+          const toneCard = practiceCard.querySelector("[data-tone-card]");
+          const toneScores = {
+            speed: practiceCard.querySelector("[data-tone-score=\"speed\"]"),
+            intonation: practiceCard.querySelector("[data-tone-score=\"intonation\"]"),
+            pause: practiceCard.querySelector("[data-tone-score=\"pause\"]"),
+          };
+          const toneTips = practiceCard.querySelector("[data-tone-tips]");
           const voiceToggle = practiceCard.querySelector("[data-voice-toggle]");
           const voiceStatus = practiceCard.querySelector("[data-voice-status]");
           const practiceInput = practiceCard.querySelector("#practice-text");
@@ -625,6 +652,7 @@
           const hasSpeechSynthesis = "speechSynthesis" in window;
           let recognition = null;
           let isListening = false;
+          let recognitionStartedAt = null;
 
           const updateTraining = () => {
             const activeGender =
@@ -717,6 +745,9 @@
             if (!hasSpeechRecognition) {
               voiceToggle.setAttribute("disabled", "true");
               voiceStatus.textContent = "音声入力: このブラウザでは利用できません";
+              if (toneCard) {
+                toneCard.classList.add("is-disabled");
+              }
             }
             voiceToggle.addEventListener("click", () => {
               if (!hasSpeechRecognition) {
@@ -732,18 +763,74 @@
                   if (transcript && practiceInput) {
                     practiceInput.value = transcript;
                   }
+                  if (toneTips) {
+                    const durationSec = recognitionStartedAt
+                      ? Math.max((Date.now() - recognitionStartedAt) / 1000, 1)
+                      : null;
+                    const pace = durationSec ? transcript.length / durationSec : null;
+                    const punctuationCount =
+                      (transcript.match(/[、。！？!?]/g) || []).length;
+                    const paceScore =
+                      pace === null
+                        ? 3.0
+                        : Math.min(5, Math.max(1, 5 - Math.abs(pace - 9) / 2));
+                    const intonationScore = Math.min(5, 2.5 + punctuationCount * 0.4);
+                    const pauseScore = Math.min(
+                      5,
+                      2.5 + (punctuationCount / Math.max(transcript.length, 10)) * 80,
+                    );
+
+                    if (toneScores.speed) {
+                      toneScores.speed.textContent = paceScore.toFixed(1);
+                    }
+                    if (toneScores.intonation) {
+                      toneScores.intonation.textContent = intonationScore.toFixed(1);
+                    }
+                    if (toneScores.pause) {
+                      toneScores.pause.textContent = pauseScore.toFixed(1);
+                    }
+
+                    toneTips.innerHTML = "";
+                    const tips = [];
+                    if (pace !== null && pace > 12) {
+                      tips.push("スピードが速めです。区切りを意識して少しゆっくり話しましょう。");
+                    } else if (pace !== null && pace < 6) {
+                      tips.push("スピードがゆっくりめです。要点を短くまとめてテンポを上げましょう。");
+                    } else {
+                      tips.push("スピードは適切です。相手の反応を見ながら微調整しましょう。");
+                    }
+                    if (intonationScore < 3.2) {
+                      tips.push("抑揚が控えめです。感情語や語尾で抑揚をつけると伝わりやすくなります。");
+                    } else {
+                      tips.push("抑揚は良好です。強調したい部分をもう少し意識すると効果的です。");
+                    }
+                    if (pauseScore < 3.2) {
+                      tips.push("間が短めです。相づちの余白を意識すると安心感が増します。");
+                    } else {
+                      tips.push("間の取り方は良好です。相手の反応に合わせて調整しましょう。");
+                    }
+
+                    tips.forEach((tip) => {
+                      const item = document.createElement("li");
+                      item.textContent = tip;
+                      toneTips.appendChild(item);
+                    });
+                  }
                 });
                 recognition.addEventListener("start", () => {
                   isListening = true;
                   voiceStatus.textContent = "音声入力: 受付中...";
+                  recognitionStartedAt = Date.now();
                 });
                 recognition.addEventListener("end", () => {
                   isListening = false;
                   voiceStatus.textContent = "音声入力: 停止";
+                  recognitionStartedAt = null;
                 });
                 recognition.addEventListener("error", () => {
                   isListening = false;
                   voiceStatus.textContent = "音声入力: エラーが発生しました";
+                  recognitionStartedAt = null;
                 });
               }
 
