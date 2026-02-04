@@ -249,15 +249,21 @@
             </p>
             <div class="input-toggle">
               <button class="toggle-button is-active" type="button">テキスト入力</button>
-              <button class="toggle-button" type="button">音声入力</button>
+              <button class="toggle-button" type="button" data-voice-toggle>音声入力</button>
             </div>
+            <p class="voice-status" data-voice-status>音声入力: 未開始</p>
             <label class="input-label" for="practice-text">会話したい内容を入力</label>
             <textarea
               id="practice-text"
               class="practice-input"
               placeholder="例：初めてのデートで緊張をほぐす会話をしたい"
             ></textarea>
-            <button class="primary full-width" type="button">AIに相談する</button>
+            <div class="practice-actions">
+              <button class="primary full-width" type="button" data-practice-submit>AIに相談する</button>
+              <button class="secondary full-width" type="button" data-voice-speak>
+                AIの返答を読み上げ
+              </button>
+            </div>
             <div class="ai-response">
               <p class="response-title">AIからの返答例</p>
               <p data-scenario-response>
@@ -470,6 +476,17 @@
           const scenarioButtons = practiceCard.querySelectorAll("[data-scenario]");
           const scenarioText = practiceCard.querySelector("[data-scenario-text]");
           const scenarioResponse = practiceCard.querySelector("[data-scenario-response]");
+          const voiceToggle = practiceCard.querySelector("[data-voice-toggle]");
+          const voiceStatus = practiceCard.querySelector("[data-voice-status]");
+          const practiceInput = practiceCard.querySelector("#practice-text");
+          const practiceSubmit = practiceCard.querySelector("[data-practice-submit]");
+          const speakButton = practiceCard.querySelector("[data-voice-speak]");
+          const SpeechRecognition =
+            window.SpeechRecognition || window.webkitSpeechRecognition;
+          const hasSpeechRecognition = Boolean(SpeechRecognition);
+          const hasSpeechSynthesis = "speechSynthesis" in window;
+          let recognition = null;
+          let isListening = false;
 
           const updateTraining = () => {
             const activeGender =
@@ -541,6 +558,79 @@
               updateTraining();
             });
           });
+
+          if (voiceToggle && practiceInput && voiceStatus) {
+            if (!hasSpeechRecognition) {
+              voiceToggle.setAttribute("disabled", "true");
+              voiceStatus.textContent = "音声入力: このブラウザでは利用できません";
+            }
+            voiceToggle.addEventListener("click", () => {
+              if (!hasSpeechRecognition) {
+                return;
+              }
+              if (!recognition) {
+                recognition = new SpeechRecognition();
+                recognition.lang = "ja-JP";
+                recognition.interimResults = false;
+                recognition.maxAlternatives = 1;
+                recognition.addEventListener("result", (event) => {
+                  const transcript = event.results?.[0]?.[0]?.transcript;
+                  if (transcript && practiceInput) {
+                    practiceInput.value = transcript;
+                  }
+                });
+                recognition.addEventListener("start", () => {
+                  isListening = true;
+                  voiceStatus.textContent = "音声入力: 受付中...";
+                });
+                recognition.addEventListener("end", () => {
+                  isListening = false;
+                  voiceStatus.textContent = "音声入力: 停止";
+                });
+                recognition.addEventListener("error", () => {
+                  isListening = false;
+                  voiceStatus.textContent = "音声入力: エラーが発生しました";
+                });
+              }
+
+              if (isListening) {
+                recognition.stop();
+              } else {
+                recognition.start();
+              }
+            });
+          }
+
+          if (practiceSubmit && scenarioResponse) {
+            practiceSubmit.addEventListener("click", () => {
+              if (!hasSpeechSynthesis) {
+                return;
+              }
+              const utterance = new SpeechSynthesisUtterance(
+                scenarioResponse.textContent ?? "",
+              );
+              utterance.lang = "ja-JP";
+              window.speechSynthesis.cancel();
+              window.speechSynthesis.speak(utterance);
+            });
+          }
+
+          if (speakButton && scenarioResponse) {
+            if (!hasSpeechSynthesis) {
+              speakButton.setAttribute("disabled", "true");
+            }
+            speakButton.addEventListener("click", () => {
+              if (!hasSpeechSynthesis) {
+                return;
+              }
+              const utterance = new SpeechSynthesisUtterance(
+                scenarioResponse.textContent ?? "",
+              );
+              utterance.lang = "ja-JP";
+              window.speechSynthesis.cancel();
+              window.speechSynthesis.speak(utterance);
+            });
+          }
 
           updateTraining();
         }

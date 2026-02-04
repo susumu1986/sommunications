@@ -244,6 +244,16 @@ button {
   gap: 16px;
 }
 
+.practice-actions {
+  display: grid;
+  gap: 10px;
+}
+
+.voice-status {
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
 .scenario-selector {
   display: grid;
   gap: 10px;
