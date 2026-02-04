@@ -137,7 +137,7 @@
             </p>
           </div>
           <div class="avatar-grid">
-            <article class="card avatar-card">
+            <article class="card avatar-card" data-avatar="female">
               <div
                 class="avatar-animation"
                 data-src="https://assets2.lottiefiles.com/packages/lf20_1pxqjqps.json"
@@ -145,8 +145,9 @@
               ></div>
               <h3>女性アバター</h3>
               <p>やわらかな表情とリアクションで、会話の流れをつかめます。</p>
+              <p class="avatar-status" data-avatar-status>表情: ニュートラル</p>
             </article>
-            <article class="card avatar-card">
+            <article class="card avatar-card" data-avatar="male">
               <div
                 class="avatar-animation"
                 data-src="https://assets10.lottiefiles.com/packages/lf20_touohxv0.json"
@@ -154,8 +155,9 @@
               ></div>
               <h3>男性アバター</h3>
               <p>落ち着いた表情の変化をチェックして、安心感ある会話を練習。</p>
+              <p class="avatar-status" data-avatar-status>表情: ニュートラル</p>
             </article>
-            <article class="card avatar-card">
+            <article class="card avatar-card" data-avatar="conversation">
               <div
                 class="avatar-animation"
                 data-src="https://assets6.lottiefiles.com/packages/lf20_jcikwtux.json"
@@ -163,6 +165,7 @@
               ></div>
               <h3>会話中の表情</h3>
               <p>相手の反応を見ながら、会話のテンポと感情表現を磨きます。</p>
+              <p class="avatar-status" data-avatar-status>表情: ニュートラル</p>
             </article>
           </div>
         </div>
@@ -405,24 +408,28 @@
                 "初対面のぎこちなさをほぐすため、相手が安心できる質問から会話を始めましょう。",
               response:
                 "「最初は相手が話しやすい軽い質問から入りましょう。趣味や最近ハマっていることを聞いて、共通点があれば自然に話題を広げられます。」",
+              mood: "positive",
             },
             reunion: {
               note:
                 "久しぶりの再会では、相手の近況を丁寧に聞きながら思い出話を織り交ぜます。",
               response:
                 "「最近どうしてた？と近況を聞いたあとに、前に話していたことを覚えていると伝えると安心感が生まれます。」",
+              mood: "positive",
             },
             confession: {
               note:
                 "好意を伝える場面では、相手の気持ちに配慮しつつ素直な言葉で伝えましょう。",
               response:
                 "「あなたと話すと落ち着くし、もっと一緒に過ごしたいと思っています。急がずに気持ちを聞かせてもらえたら嬉しいです。」",
+              mood: "thoughtful",
             },
             silence: {
               note:
                 "気まずい沈黙は、相手が安心できる話題に戻してテンポを整えましょう。",
               response:
                 "「沈黙が続いたら、相手が答えやすい質問を一つ挟みます。最近の楽しみを聞くと自然に会話が戻ります。」",
+              mood: "neutral",
             },
           },
           male: {
@@ -431,24 +438,28 @@
                 "初対面では要点が伝わる質問とリアクションを意識し、安心感を作ります。",
               response:
                 "「会話の入り口はシンプルに。相手の関心を聞いたら、具体的に反応して話題を深めると心地よいテンポになります。」",
+              mood: "positive",
             },
             reunion: {
               note:
                 "久しぶりの再会では、変化に気づいた点を伝えて距離を縮めます。",
               response:
                 "「久しぶりだね、雰囲気が変わったねとポジティブに伝えると会話がスムーズに始まります。」",
+              mood: "positive",
             },
             confession: {
               note:
                 "好意を伝えるときは、具体的なエピソードを添えて誠実さを示しましょう。",
               response:
                 "「一緒に過ごす時間が楽しくて、もっと仲良くなりたいと思いました。あなたはどう感じていますか？」",
+              mood: "thoughtful",
             },
             silence: {
               note:
                 "気まずい沈黙は、会話の目的を示してテンポを整えると安心感が生まれます。",
               response:
                 "「沈黙のときは、今の流れを軽く整理して話題を変えると自然です。『ところで最近は？』と切り替えましょう。」",
+              mood: "neutral",
             },
           },
         };
@@ -477,6 +488,42 @@
             if (scenarioResponse) {
               scenarioResponse.textContent = copy.response;
             }
+
+            const avatars = document.querySelectorAll("[data-avatar]");
+            avatars.forEach((avatar) => {
+              avatar.classList.remove("is-positive", "is-thoughtful", "is-neutral");
+              avatar.classList.add("is-neutral");
+              const status = avatar.querySelector("[data-avatar-status]");
+              if (status) {
+                status.textContent = "表情: ニュートラル";
+              }
+            });
+            const activeAvatar = document.querySelector(
+              `[data-avatar=\"${activeGender}\"]`,
+            );
+            const conversationAvatar = document.querySelector("[data-avatar=\"conversation\"]");
+            const moodClass = `is-${copy.mood ?? "neutral"}`;
+            [activeAvatar, conversationAvatar].forEach((avatar) => {
+              if (!avatar) {
+                return;
+              }
+              avatar.classList.remove("is-positive", "is-thoughtful", "is-neutral");
+              avatar.classList.add(moodClass);
+            });
+            const moodText = {
+              positive: "表情: リラックス",
+              thoughtful: "表情: 真剣",
+              neutral: "表情: ニュートラル",
+            };
+            [activeAvatar, conversationAvatar].forEach((avatar) => {
+              if (!avatar) {
+                return;
+              }
+              const status = avatar.querySelector("[data-avatar-status]");
+              if (status) {
+                status.textContent = moodText[copy.mood] ?? moodText.neutral;
+              }
+            });
           };
 
           genderButtons.forEach((button) => {
