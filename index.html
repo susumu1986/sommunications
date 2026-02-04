@@ -66,20 +66,20 @@
             <p>
               聴き方・話し方・共感力をバランスよく学び、職場や友人関係で活きる「信頼される伝え方」を身に付けます。
             </p>
-            <div class="option-group">
+            <div class="option-group" data-option-group="communication">
               <span class="option-title">相手の性別を選択</span>
               <div class="option-buttons">
-                <button class="option-button is-active" type="button">女性</button>
-                <button class="option-button" type="button">男性</button>
+                <button class="option-button is-active" type="button" data-gender="female">女性</button>
+                <button class="option-button" type="button" data-gender="male">男性</button>
               </div>
             </div>
-            <p class="option-note">
+            <p class="option-note" data-gender-text>
               女性心理・男性心理の違いを踏まえた会話パターンで、相手に合わせた伝え方を練習できます。
             </p>
             <ul>
-              <li>傾聴チェックリスト</li>
-              <li>フィードバック練習</li>
-              <li>感情の言語化ワーク</li>
+              <li data-gender-item>傾聴チェックリスト</li>
+              <li data-gender-item>フィードバック練習</li>
+              <li data-gender-item>感情の言語化ワーク</li>
             </ul>
           </article>
           <article class="card">
@@ -87,20 +87,20 @@
             <p>
               出会いから関係構築まで、相手を尊重しながら距離を縮める会話設計を学びます。
             </p>
-            <div class="option-group">
+            <div class="option-group" data-option-group="romance">
               <span class="option-title">相手の性別を選択</span>
               <div class="option-buttons">
-                <button class="option-button is-active" type="button">女性</button>
-                <button class="option-button" type="button">男性</button>
+                <button class="option-button is-active" type="button" data-gender="female">女性</button>
+                <button class="option-button" type="button" data-gender="male">男性</button>
               </div>
             </div>
-            <p class="option-note">
+            <p class="option-note" data-gender-text>
               心理的な安心感を生む言葉選びや距離感を、女性向け・男性向けに切り替えて確認できます。
             </p>
             <ul>
-              <li>会話の間合いとテンポ</li>
-              <li>好意の伝え方シミュレーション</li>
-              <li>連絡頻度のガイド</li>
+              <li data-gender-item>会話の間合いとテンポ</li>
+              <li data-gender-item>好意の伝え方シミュレーション</li>
+              <li data-gender-item>連絡頻度のガイド</li>
             </ul>
           </article>
           <article class="card">
@@ -108,20 +108,20 @@
             <p>
               相手の好みを反映したデートプラン作成の流れを、テンプレートとチェックポイントで習得します。
             </p>
-            <div class="option-group">
+            <div class="option-group" data-option-group="date">
               <span class="option-title">相手の性別を選択</span>
               <div class="option-buttons">
-                <button class="option-button is-active" type="button">女性</button>
-                <button class="option-button" type="button">男性</button>
+                <button class="option-button is-active" type="button" data-gender="female">女性</button>
+                <button class="option-button" type="button" data-gender="male">男性</button>
               </div>
             </div>
-            <p class="option-note">
+            <p class="option-note" data-gender-text>
               相手の心理に合わせた提案やフォローができるよう、柔軟なプラン調整をガイドします。
             </p>
             <ul>
-              <li>目的別プランニング</li>
-              <li>当日の段取りチェック</li>
-              <li>振り返りメモ機能</li>
+              <li data-gender-item>目的別プランニング</li>
+              <li data-gender-item>当日の段取りチェック</li>
+              <li data-gender-item>振り返りメモ機能</li>
             </ul>
           </article>
         </div>
@@ -282,6 +282,96 @@
             autoplay: true,
             path: src,
           });
+        });
+
+        const copyMap = {
+          communication: {
+            female: {
+              note:
+                "女性心理・男性心理の違いを踏まえた会話パターンで、相手に合わせた伝え方を練習できます。",
+              items: [
+                "傾聴チェックリスト",
+                "フィードバック練習",
+                "感情の言語化ワーク",
+              ],
+            },
+            male: {
+              note:
+                "男性心理を意識した会話テンポと要点整理で、信頼される伝え方を実践できます。",
+              items: [
+                "要点の整理トーク",
+                "行動提案の伝え方",
+                "短い共感フレーズ練習",
+              ],
+            },
+          },
+          romance: {
+            female: {
+              note:
+                "心理的な安心感を生む言葉選びや距離感を、女性向け・男性向けに切り替えて確認できます。",
+              items: [
+                "会話の間合いとテンポ",
+                "好意の伝え方シミュレーション",
+                "連絡頻度のガイド",
+              ],
+            },
+            male: {
+              note:
+                "男性心理に合わせて、興味関心の示し方や前向きな提案の出し方を調整できます。",
+              items: [
+                "安心感のある話題選び",
+                "前向きな褒め方",
+                "次の約束の切り出し方",
+              ],
+            },
+          },
+          date: {
+            female: {
+              note:
+                "相手の心理に合わせた提案やフォローができるよう、柔軟なプラン調整をガイドします。",
+              items: ["目的別プランニング", "当日の段取りチェック", "振り返りメモ機能"],
+            },
+            male: {
+              note:
+                "男性心理に合わせて、達成感や安心感を意識したプラン設計とフォローを学べます。",
+              items: ["達成感のある流れ設計", "トラブル時の代替案", "次回につなぐ振り返り"],
+            },
+          },
+        };
+
+        document.querySelectorAll("[data-option-group]").forEach((group) => {
+          const groupKey = group.dataset.optionGroup;
+          const note = group.parentElement?.querySelector("[data-gender-text]");
+          const items = group.parentElement?.querySelectorAll("[data-gender-item]");
+          if (!groupKey || !note || !items?.length) {
+            return;
+          }
+
+          const setGender = (gender) => {
+            const copy = copyMap[groupKey]?.[gender];
+            if (!copy) {
+              return;
+            }
+            note.textContent = copy.note;
+            items.forEach((item, index) => {
+              item.textContent = copy.items[index] ?? item.textContent;
+            });
+          };
+
+          group.querySelectorAll(".option-button").forEach((button) => {
+            button.addEventListener("click", () => {
+              group.querySelectorAll(".option-button").forEach((item) => {
+                item.classList.remove("is-active");
+              });
+              button.classList.add("is-active");
+              setGender(button.dataset.gender);
+            });
+          });
+
+          const activeButton = group.querySelector(".option-button.is-active");
+          if (activeButton) {
+            setGender(activeButton.dataset.gender);
+          }
         });
       });
     </script>
