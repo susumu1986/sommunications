@@ -223,6 +223,25 @@
           </div>
           <div class="card practice-card">
             <h3>AIとの対話シミュレーション</h3>
+            <div class="goal-selector" data-goal-group>
+              <p class="scenario-title">目的を選択</p>
+              <div class="option-buttons">
+                <button class="option-button is-active" type="button" data-goal="comfort">
+                  安心感をつくる
+                </button>
+                <button class="option-button" type="button" data-goal="next-step">
+                  次の約束につなげる
+                </button>
+                <button class="option-button" type="button" data-goal="interest">
+                  興味を引き出す
+                </button>
+              </div>
+              <ul class="goal-criteria" data-goal-criteria>
+                <li>相手の答えやすい質問を最初に投げる。</li>
+                <li>一言共感を添えて、安心感を示す。</li>
+                <li>話題を急がず、相手のペースを尊重する。</li>
+              </ul>
+            </div>
             <div class="input-toggle">
               <button class="toggle-button is-active" type="button" data-training-gender="female">女性</button>
               <button class="toggle-button" type="button" data-training-gender="male">男性</button>
@@ -641,6 +660,8 @@
             pause: practiceCard.querySelector("[data-tone-score=\"pause\"]"),
           };
           const toneTips = practiceCard.querySelector("[data-tone-tips]");
+          const goalButtons = practiceCard.querySelectorAll("[data-goal]");
+          const goalCriteria = practiceCard.querySelector("[data-goal-criteria]");
           const voiceToggle = practiceCard.querySelector("[data-voice-toggle]");
           const voiceStatus = practiceCard.querySelector("[data-voice-status]");
           const practiceInput = practiceCard.querySelector("#practice-text");
@@ -653,6 +674,23 @@
           let recognition = null;
           let isListening = false;
           let recognitionStartedAt = null;
+          const goalCriteriaMap = {
+            comfort: [
+              "相手の答えやすい質問を最初に投げる。",
+              "一言共感を添えて、安心感を示す。",
+              "話題を急がず、相手のペースを尊重する。",
+            ],
+            "next-step": [
+              "楽しかった点を短く振り返る。",
+              "次に話したいテーマを具体的に提案する。",
+              "相手の都合を聞いて選択肢を渡す。",
+            ],
+            interest: [
+              "相手の趣味や最近の出来事に触れる。",
+              "深掘り質問で興味を言語化してもらう。",
+              "相手の話題を要約して関心を示す。",
+            ],
+          };
 
           const updateTraining = () => {
             const activeGender =
@@ -725,6 +763,22 @@
             });
           };
 
+          const updateGoalCriteria = () => {
+            if (!goalCriteria) {
+              return;
+            }
+            const activeGoal =
+              practiceCard.querySelector("[data-goal].is-active")?.dataset.goal ??
+              "comfort";
+            const items = goalCriteriaMap[activeGoal] ?? [];
+            goalCriteria.innerHTML = "";
+            items.forEach((text) => {
+              const item = document.createElement("li");
+              item.textContent = text;
+              goalCriteria.appendChild(item);
+            });
+          };
+
           genderButtons.forEach((button) => {
             button.addEventListener("click", () => {
               genderButtons.forEach((item) => item.classList.remove("is-active"));
@@ -738,6 +792,14 @@
               scenarioButtons.forEach((item) => item.classList.remove("is-active"));
               button.classList.add("is-active");
               updateTraining();
+            });
+          });
+
+          goalButtons.forEach((button) => {
+            button.addEventListener("click", () => {
+              goalButtons.forEach((item) => item.classList.remove("is-active"));
+              button.classList.add("is-active");
+              updateGoalCriteria();
             });
           });
 
@@ -873,6 +935,7 @@
             });
           }
 
+          updateGoalCriteria();
           updateTraining();
         }
       });

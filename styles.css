@@ -244,6 +244,19 @@ button {
   gap: 16px;
 }
 
+.goal-selector {
+  display: grid;
+  gap: 10px;
+}
+
+.goal-criteria {
+  margin: 0;
+  padding-left: 18px;
+  color: var(--muted);
+  display: grid;
+  gap: 6px;
+}
+
 .practice-actions {
   display: grid;
   gap: 10px;
