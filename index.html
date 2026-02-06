@@ -716,6 +716,31 @@
             confession: "好意を伝える場面",
             silence: "気まずい沈黙",
           };
+          const getActiveTrainingState = () => {
+            const activeGender =
+              practiceCard.querySelector("[data-training-gender].is-active")?.dataset
+                .trainingGender ?? "female";
+            const activeScenario =
+              practiceCard.querySelector("[data-scenario].is-active")?.dataset.scenario ??
+              "first-meet";
+            const activeGoal =
+              practiceCard.querySelector("[data-goal].is-active")?.dataset.goal ??
+              "comfort";
+            return {
+              activeGender,
+              activeScenario,
+              activeGoal,
+            };
+          };
+          const buildResponseText = (inputText, scenarioLabel, goalLabel, copy) => {
+            if (!copy) {
+              return "";
+            }
+            if (inputText) {
+              return `「${inputText}」を踏まえて、${scenarioLabel}で${goalLabel}を意識した返答例です。${copy.response}`;
+            }
+            return `入力内容がないため、${scenarioLabel}の代表的な返答例を表示しています。${copy.response}`;
+          };
 
           const updateTraining = () => {
             const activeGender =
@@ -932,32 +957,24 @@
           if (practiceSubmit && scenarioResponse) {
             practiceSubmit.addEventListener("click", () => {
               const inputText = practiceInput?.value?.trim() ?? "";
-              const activeGender =
-                practiceCard.querySelector("[data-training-gender].is-active")?.dataset
-                  .trainingGender ?? "female";
-              const activeScenario =
-                practiceCard.querySelector("[data-scenario].is-active")?.dataset
-                  .scenario ?? "first-meet";
-              const activeGoal =
-                practiceCard.querySelector("[data-goal].is-active")?.dataset.goal ??
-                "comfort";
+              const { activeGender, activeScenario, activeGoal } =
+                getActiveTrainingState();
               const copy = trainingCopy?.[activeGender]?.[activeScenario];
               if (!copy) {
                 return;
               }
               const scenarioLabel = scenarioLabelMap[activeScenario] ?? "シナリオ";
               const goalLabel = goalLabelMap[activeGoal] ?? "目的";
-              if (inputText) {
-                scenarioResponse.textContent = `「${inputText}」を踏まえて、${scenarioLabel}で${goalLabel}を意識した返答例です。${copy.response}`;
-                if (practiceStatus) {
-                  practiceStatus.textContent = "入力内容を反映して返答例を更新しました。";
-                }
-              } else {
-                scenarioResponse.textContent = `入力内容がないため、${scenarioLabel}の代表的な返答例を表示しています。${copy.response}`;
-                if (practiceStatus) {
-                  practiceStatus.textContent =
-                    "入力が空でした。具体的な内容を入れると返答がさらに具体化されます。";
-                }
+              scenarioResponse.textContent = buildResponseText(
+                inputText,
+                scenarioLabel,
+                goalLabel,
+                copy,
+              );
+              if (practiceStatus) {
+                practiceStatus.textContent = inputText
+                  ? "入力内容を反映して返答例を更新しました。"
+                  : "入力が空でした。具体的な内容を入れると返答がさらに具体化されます。";
               }
 
               if (copy.feedback && feedbackTips) {
@@ -978,6 +995,31 @@
                   item.textContent = tip;
                   feedbackTips.appendChild(item);
                 });
+              }
+            });
+          }
+
+          if (practiceInput && scenarioResponse) {
+            practiceInput.addEventListener("input", () => {
+              const inputText = practiceInput.value.trim();
+              const { activeGender, activeScenario, activeGoal } =
+                getActiveTrainingState();
+              const copy = trainingCopy?.[activeGender]?.[activeScenario];
+              if (!copy) {
+                return;
+              }
+              const scenarioLabel = scenarioLabelMap[activeScenario] ?? "シナリオ";
+              const goalLabel = goalLabelMap[activeGoal] ?? "目的";
+              scenarioResponse.textContent = buildResponseText(
+                inputText,
+                scenarioLabel,
+                goalLabel,
+                copy,
+              );
+              if (practiceStatus) {
+                practiceStatus.textContent = inputText
+                  ? "入力中の内容を反映して返答例を更新しています。"
+                  : "入力が空です。具体的な内容を入れると返答がさらに具体化されます。";
               }
             });
           }
