@@ -274,6 +274,9 @@
               <button class="toggle-button" type="button" data-voice-toggle>音声入力</button>
             </div>
             <p class="voice-status" data-voice-status>音声入力: 未開始</p>
+            <p class="voice-guide" data-voice-guide>
+              音声入力を開始するには「音声入力」を押してください。聞き取りに失敗した場合はもう一度押すと再開できます。
+            </p>
             <div class="tone-card" data-tone-card>
               <p class="response-title">音声トーン評価</p>
               <div class="tone-grid">
@@ -681,6 +684,7 @@
           const goalCriteria = practiceCard.querySelector("[data-goal-criteria]");
           const voiceToggle = practiceCard.querySelector("[data-voice-toggle]");
           const voiceStatus = practiceCard.querySelector("[data-voice-status]");
+          const voiceGuide = practiceCard.querySelector("[data-voice-guide]");
           const practiceInput = practiceCard.querySelector("#practice-text");
           const practiceSubmit = practiceCard.querySelector("[data-practice-submit]");
           const speakButton = practiceCard.querySelector("[data-voice-speak]");
@@ -877,6 +881,10 @@
             if (!hasSpeechRecognition) {
               voiceToggle.setAttribute("disabled", "true");
               voiceStatus.textContent = "音声入力: このブラウザでは利用できません";
+              if (voiceGuide) {
+                voiceGuide.textContent =
+                  "音声入力に非対応のため、テキスト入力をご利用ください。";
+              }
               if (toneCard) {
                 toneCard.classList.add("is-disabled");
               }
@@ -952,16 +960,28 @@
                 recognition.addEventListener("start", () => {
                   isListening = true;
                   voiceStatus.textContent = "音声入力: 受付中...";
+                  if (voiceGuide) {
+                    voiceGuide.textContent =
+                      "話し終えたら自動で停止します。止まらない場合はもう一度押してください。";
+                  }
                   recognitionStartedAt = Date.now();
                 });
                 recognition.addEventListener("end", () => {
                   isListening = false;
                   voiceStatus.textContent = "音声入力: 停止";
+                  if (voiceGuide) {
+                    voiceGuide.textContent =
+                      "必要に応じてもう一度「音声入力」を押して再開できます。";
+                  }
                   recognitionStartedAt = null;
                 });
                 recognition.addEventListener("error", () => {
                   isListening = false;
                   voiceStatus.textContent = "音声入力: エラーが発生しました";
+                  if (voiceGuide) {
+                    voiceGuide.textContent =
+                      "周囲の雑音やマイク設定をご確認のうえ、再度お試しください。";
+                  }
                   recognitionStartedAt = null;
                 });
               }
@@ -970,6 +990,10 @@
                 recognition.stop();
               } else {
                 recognition.start();
+                if (voiceGuide) {
+                  voiceGuide.textContent =
+                    "マイクに向かって話してください。聞き取れない場合はもう一度押すと再開できます。";
+                }
               }
             });
           }

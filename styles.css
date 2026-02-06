@@ -327,6 +327,12 @@ button {
   color: var(--muted);
 }
 
+.voice-guide {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
 .tone-card {
   background: #f1ecff;
   border-radius: 16px;
