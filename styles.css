@@ -262,6 +262,12 @@ button {
   gap: 10px;
 }
 
+.practice-status {
+  font-size: 0.85rem;
+  color: var(--muted);
+  margin: 0;
+}
+
 .voice-status {
   font-size: 0.85rem;
   color: var(--muted);

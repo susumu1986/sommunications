@@ -297,6 +297,9 @@
               class="practice-input"
               placeholder="例：初めてのデートで緊張をほぐす会話をしたい"
             ></textarea>
+            <p class="practice-status" data-practice-status>
+              入力内容に応じて返答と改善ポイントが更新されます。
+            </p>
             <div class="practice-actions">
               <button class="primary full-width" type="button" data-practice-submit>AIに相談する</button>
               <button class="secondary full-width" type="button" data-voice-speak>
@@ -660,6 +663,7 @@
             pause: practiceCard.querySelector("[data-tone-score=\"pause\"]"),
           };
           const toneTips = practiceCard.querySelector("[data-tone-tips]");
+          const practiceStatus = practiceCard.querySelector("[data-practice-status]");
           const goalButtons = practiceCard.querySelectorAll("[data-goal]");
           const goalCriteria = practiceCard.querySelector("[data-goal-criteria]");
           const voiceToggle = practiceCard.querySelector("[data-voice-toggle]");
@@ -690,6 +694,17 @@
               "深掘り質問で興味を言語化してもらう。",
               "相手の話題を要約して関心を示す。",
             ],
+          };
+          const goalLabelMap = {
+            comfort: "安心感づくり",
+            "next-step": "次の約束づくり",
+            interest: "興味喚起",
+          };
+          const scenarioLabelMap = {
+            "first-meet": "初対面",
+            reunion: "久しぶりの再会",
+            confession: "好意を伝える場面",
+            silence: "気まずい沈黙",
           };
 
           const updateTraining = () => {
@@ -906,15 +921,54 @@
 
           if (practiceSubmit && scenarioResponse) {
             practiceSubmit.addEventListener("click", () => {
-              if (!hasSpeechSynthesis) {
+              const inputText = practiceInput?.value?.trim() ?? "";
+              const activeGender =
+                practiceCard.querySelector("[data-training-gender].is-active")?.dataset
+                  .trainingGender ?? "female";
+              const activeScenario =
+                practiceCard.querySelector("[data-scenario].is-active")?.dataset
+                  .scenario ?? "first-meet";
+              const activeGoal =
+                practiceCard.querySelector("[data-goal].is-active")?.dataset.goal ??
+                "comfort";
+              const copy = trainingCopy?.[activeGender]?.[activeScenario];
+              if (!copy) {
                 return;
               }
-              const utterance = new SpeechSynthesisUtterance(
-                scenarioResponse.textContent ?? "",
-              );
-              utterance.lang = "ja-JP";
-              window.speechSynthesis.cancel();
-              window.speechSynthesis.speak(utterance);
+              const scenarioLabel = scenarioLabelMap[activeScenario] ?? "シナリオ";
+              const goalLabel = goalLabelMap[activeGoal] ?? "目的";
+              if (inputText) {
+                scenarioResponse.textContent = `「${inputText}」を踏まえて、${scenarioLabel}で${goalLabel}を意識した返答例です。${copy.response}`;
+                if (practiceStatus) {
+                  practiceStatus.textContent = "入力内容を反映して返答例を更新しました。";
+                }
+              } else {
+                scenarioResponse.textContent = `入力内容がないため、${scenarioLabel}の代表的な返答例を表示しています。${copy.response}`;
+                if (practiceStatus) {
+                  practiceStatus.textContent =
+                    "入力が空でした。具体的な内容を入れると返答がさらに具体化されます。";
+                }
+              }
+
+              if (copy.feedback && feedbackTips) {
+                feedbackTips.innerHTML = "";
+                const tips = [...copy.feedback.tips];
+                if (inputText) {
+                  if (inputText.length < 20) {
+                    tips.push("状況や相手の気持ちをもう少し具体的に書くと、返答の精度が上がります。");
+                  } else if (inputText.length > 120) {
+                    tips.push("要点を短く区切ると、会話テンポのフィードバックがより正確になります。");
+                  }
+                  if (/[?？]/.test(inputText)) {
+                    tips.push("質問を入れると会話の方向性が明確になり、次の提案がしやすくなります。");
+                  }
+                }
+                tips.forEach((tip) => {
+                  const item = document.createElement("li");
+                  item.textContent = tip;
+                  feedbackTips.appendChild(item);
+                });
+              }
             });
           }
 
