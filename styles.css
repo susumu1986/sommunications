@@ -312,6 +312,16 @@ button {
   margin: 0;
 }
 
+.training-summary {
+  margin: 0;
+  padding: 8px 12px;
+  border-radius: 12px;
+  background: #f1ecff;
+  font-size: 0.85rem;
+  color: var(--text);
+  font-weight: 600;
+}
+
 .voice-status {
   font-size: 0.85rem;
   color: var(--muted);

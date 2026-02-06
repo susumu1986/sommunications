@@ -246,6 +246,9 @@
               <button class="toggle-button is-active" type="button" data-training-gender="female">女性</button>
               <button class="toggle-button" type="button" data-training-gender="male">男性</button>
             </div>
+            <p class="training-summary" data-training-summary>
+              現在の設定：女性 × 初対面 × 安心感づくり
+            </p>
             <div class="scenario-selector" data-scenario-group>
               <p class="scenario-title">シナリオを選択</p>
               <div class="option-buttons">
@@ -716,6 +719,10 @@
             confession: "好意を伝える場面",
             silence: "気まずい沈黙",
           };
+          const genderLabelMap = {
+            female: "女性",
+            male: "男性",
+          };
           const getActiveTrainingState = () => {
             const activeGender =
               practiceCard.querySelector("[data-training-gender].is-active")?.dataset
@@ -740,6 +747,17 @@
               return `「${inputText}」を踏まえて、${scenarioLabel}で${goalLabel}を意識した返答例です。${copy.response}`;
             }
             return `入力内容がないため、${scenarioLabel}の代表的な返答例を表示しています。${copy.response}`;
+          };
+          const updateTrainingSummary = () => {
+            const summary = practiceCard.querySelector("[data-training-summary]");
+            if (!summary) {
+              return;
+            }
+            const { activeGender, activeScenario, activeGoal } = getActiveTrainingState();
+            const genderLabel = genderLabelMap[activeGender] ?? "性別";
+            const scenarioLabel = scenarioLabelMap[activeScenario] ?? "シナリオ";
+            const goalLabel = goalLabelMap[activeGoal] ?? "目的";
+            summary.textContent = `現在の設定：${genderLabel} × ${scenarioLabel} × ${goalLabel}`;
           };
 
           const updateTraining = () => {
@@ -811,6 +829,7 @@
                 status.textContent = moodText[copy.mood] ?? moodText.neutral;
               }
             });
+            updateTrainingSummary();
           };
 
           const updateGoalCriteria = () => {
@@ -850,6 +869,7 @@
               goalButtons.forEach((item) => item.classList.remove("is-active"));
               button.classList.add("is-active");
               updateGoalCriteria();
+              updateTrainingSummary();
             });
           });
 
