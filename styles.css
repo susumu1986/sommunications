@@ -444,6 +444,13 @@ button {
   gap: 6px;
 }
 
+.feedback-action {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--text);
+  font-weight: 600;
+}
+
 .response-title {
   color: var(--text);
   font-weight: 700;
