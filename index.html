@@ -353,7 +353,7 @@
                   <li>自分の体験談を短く添えることで、共通点を見つけやすくなります。</li>
                   <li>相手が答えたら一度共感の一言を挟むと会話のテンポが整います。</li>
                 </ul>
-                <p class="feedback-action">
+                <p class="feedback-action" data-feedback-action>
                   次の一歩：相手が答えやすい質問を1つ入れてから、自分の体験を短く添えてみましょう。
                 </p>
               </div>
@@ -730,6 +730,40 @@
             female: "女性",
             male: "男性",
           };
+          const actionHintMap = {
+            "first-meet": {
+              comfort:
+                "次の一歩：相手が答えやすい質問を1つ入れてから、自分の体験を短く添えてみましょう。",
+              "next-step":
+                "次の一歩：会話の最後に「また話したい」と伝えつつ、次に話したいテーマを1つ提案しましょう。",
+              interest:
+                "次の一歩：相手の趣味に関する深掘り質問を1つ追加して、具体的なエピソードを引き出しましょう。",
+            },
+            reunion: {
+              comfort:
+                "次の一歩：再会の嬉しさに共感しつつ、相手の近況を短く尋ねて安心感を作りましょう。",
+              "next-step":
+                "次の一歩：近況共有のあとに「今度ゆっくり話そう」と具体的な候補日を1つ示しましょう。",
+              interest:
+                "次の一歩：最近ハマっていることを聞き、相手が話しやすい具体例を添えて返しましょう。",
+            },
+            confession: {
+              comfort:
+                "次の一歩：相手の気持ちを尊重する一言を添えて、プレッシャーをかけない表現に整えましょう。",
+              "next-step":
+                "次の一歩：好意を伝えたあとに「また会えるならうれしい」と軽く次の提案を添えましょう。",
+              interest:
+                "次の一歩：相手の魅力に触れた具体的な理由を1つ加えて、自然に関心を伝えましょう。",
+            },
+            silence: {
+              comfort:
+                "次の一歩：沈黙を責めずに「落ち着きますね」などの一言で場を和らげましょう。",
+              "next-step":
+                "次の一歩：短い話題転換のあとに、次に話したいテーマを一つ提案しましょう。",
+              interest:
+                "次の一歩：相手の反応が良かった話題を一つ拾って、もう少し掘り下げてみましょう。",
+            },
+          };
           const getActiveTrainingState = () => {
             const activeGender =
               practiceCard.querySelector("[data-training-gender].is-active")?.dataset
@@ -765,6 +799,17 @@
             const scenarioLabel = scenarioLabelMap[activeScenario] ?? "シナリオ";
             const goalLabel = goalLabelMap[activeGoal] ?? "目的";
             summary.textContent = `現在の設定：${genderLabel} × ${scenarioLabel} × ${goalLabel}`;
+          };
+          const updateFeedbackAction = () => {
+            const feedbackAction = practiceCard.querySelector("[data-feedback-action]");
+            if (!feedbackAction) {
+              return;
+            }
+            const { activeScenario, activeGoal } = getActiveTrainingState();
+            const action =
+              actionHintMap?.[activeScenario]?.[activeGoal] ??
+              "次の一歩：相手の答えやすい質問を1つ入れて、会話の流れを作りましょう。";
+            feedbackAction.textContent = action;
           };
 
           const updateTraining = () => {
@@ -837,6 +882,7 @@
               }
             });
             updateTrainingSummary();
+            updateFeedbackAction();
           };
 
           const updateGoalCriteria = () => {
@@ -877,6 +923,7 @@
               button.classList.add("is-active");
               updateGoalCriteria();
               updateTrainingSummary();
+              updateFeedbackAction();
             });
           });
 
