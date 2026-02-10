@@ -850,15 +850,30 @@
             const goalLabel = goalLabelMap[activeGoal] ?? "目的";
             summary.textContent = `現在の設定：${genderLabel} × ${scenarioLabel} × ${goalLabel}`;
           };
-          const updateFeedbackAction = () => {
+          const updateFeedbackAction = (inputText = "") => {
             const feedbackAction = practiceCard.querySelector("[data-feedback-action]");
             if (!feedbackAction) {
               return;
             }
             const { activeScenario, activeGoal } = getActiveTrainingState();
-            const action =
+            const baseAction =
               actionHintMap?.[activeScenario]?.[activeGoal] ??
               "次の一歩：相手の答えやすい質問を1つ入れて、会話の流れを作りましょう。";
+            const extraActions = [];
+            if (!inputText) {
+              extraActions.push("まずは会話したい状況を1文で入力しましょう。");
+            } else {
+              if (inputText.length < 20) {
+                extraActions.push("入力が短めです。状況をもう一文追加しましょう。");
+              }
+              if (!/[?？]/.test(inputText)) {
+                extraActions.push("質問を1つ追加して相手が答えやすい流れを作りましょう。");
+              }
+            }
+            const action =
+              extraActions.length > 0
+                ? `${baseAction} 追加提案：${extraActions.join(" ")}`
+                : baseAction;
             feedbackAction.textContent = action;
           };
           const updateScenarioRecommendation = () => {
@@ -987,7 +1002,7 @@
               }
             });
             updateTrainingSummary();
-            updateFeedbackAction();
+            updateFeedbackAction(practiceInput?.value?.trim() ?? "");
             updateScenarioRecommendation();
           };
 
@@ -1029,7 +1044,7 @@
               button.classList.add("is-active");
               updateGoalCriteria();
               updateTrainingSummary();
-              updateFeedbackAction();
+              updateFeedbackAction(practiceInput?.value?.trim() ?? "");
               updateScenarioRecommendation();
             });
           });
@@ -1211,6 +1226,7 @@
                 inputStatus: inputText ? "入力済み" : "空欄",
                 commitStatus: "AI返答更新済み",
               });
+              updateFeedbackAction(inputText);
 
               if (copy.feedback && feedbackTips) {
                 feedbackTips.innerHTML = "";
@@ -1259,6 +1275,7 @@
               updateStatusPanel({
                 inputStatus: inputText ? "プレビュー更新中" : "空欄",
               });
+              updateFeedbackAction(inputText);
             });
           }
 
