@@ -281,9 +281,9 @@
               音声入力を開始するには「音声入力」を押してください。聞き取りに失敗した場合はもう一度押すと再開できます。
             </p>
             <ul class="voice-tips" data-voice-tips>
-              <li>聞き取りに失敗したら「音声入力」をもう一度押して再試行してください。</li>
-              <li>マイク許可が必要です。ブラウザの権限を確認してください。</li>
-              <li>周囲が騒がしい場合は、短い文で区切って話すと認識されやすくなります。</li>
+              <li><span class="voice-tip-icon">✅</span><span>再試行：うまく聞き取れない時はもう一度押す</span></li>
+              <li><span class="voice-tip-icon">⚠️</span><span>権限：マイク許可をオンにする</span></li>
+              <li><span class="voice-tip-icon">⚠️</span><span>騒音：短い文に区切って話す</span></li>
             </ul>
             <div class="tone-card" data-tone-card>
               <p class="response-title">音声トーン評価</p>
@@ -892,6 +892,22 @@
               rows[2].textContent = `音声：${voiceStatusText}`;
             }
           };
+          const renderVoiceTips = (tips) => {
+            if (!voiceTips) {
+              return;
+            }
+            voiceTips.innerHTML = "";
+            tips.forEach(({ icon, text }) => {
+              const item = document.createElement("li");
+              const iconSpan = document.createElement("span");
+              iconSpan.className = "voice-tip-icon";
+              iconSpan.textContent = icon;
+              const textSpan = document.createElement("span");
+              textSpan.textContent = text;
+              item.append(iconSpan, textSpan);
+              voiceTips.appendChild(item);
+            });
+          };
 
           const updateTraining = () => {
             const activeGender =
@@ -1019,16 +1035,11 @@
                   "音声入力に非対応のため、テキスト入力をご利用ください。";
               }
               updateStatusPanel({ voiceStatusText: "非対応" });
-              if (voiceTips) {
-                voiceTips.innerHTML = "";
-                ["推奨環境はChromeなどの対応ブラウザです。", "権限を許可できない場合はテキスト入力をご利用ください。"].forEach(
-                  (text) => {
-                    const item = document.createElement("li");
-                    item.textContent = text;
-                    voiceTips.appendChild(item);
-                  },
-                );
-              }
+              renderVoiceTips([
+                { icon: "⚠️", text: "再試行：対応ブラウザ（Chrome等）で開く" },
+                { icon: "⚠️", text: "権限：マイク許可できない場合はテキスト入力" },
+                { icon: "✅", text: "騒音：静かな場所で利用すると精度が上がる" },
+              ]);
               if (toneCard) {
                 toneCard.classList.add("is-disabled");
               }
@@ -1109,17 +1120,11 @@
                     voiceGuide.textContent =
                       "話し終えたら自動で停止します。止まらない場合はもう一度押してください。";
                   }
-                  if (voiceTips) {
-                    voiceTips.innerHTML = "";
-                    [
-                      "話している途中で止まる場合は、短い文に区切って話しましょう。",
-                      "聞き取りに失敗したら「音声入力」を押して再試行できます。",
-                    ].forEach((text) => {
-                      const item = document.createElement("li");
-                      item.textContent = text;
-                      voiceTips.appendChild(item);
-                    });
-                  }
+                  renderVoiceTips([
+                    { icon: "✅", text: "再試行：失敗時はもう一度ボタンを押す" },
+                    { icon: "⚠️", text: "権限：マイク入力がオンか確認する" },
+                    { icon: "⚠️", text: "騒音：短い文でゆっくり話す" },
+                  ]);
                   recognitionStartedAt = Date.now();
                 });
                 recognition.addEventListener("end", () => {
@@ -1130,17 +1135,11 @@
                     voiceGuide.textContent =
                       "必要に応じてもう一度「音声入力」を押して再開できます。";
                   }
-                  if (voiceTips) {
-                    voiceTips.innerHTML = "";
-                    [
-                      "続けて話す場合は「音声入力」をもう一度押してください。",
-                      "うまく認識されないときはマイクの権限を確認しましょう。",
-                    ].forEach((text) => {
-                      const item = document.createElement("li");
-                      item.textContent = text;
-                      voiceTips.appendChild(item);
-                    });
-                  }
+                  renderVoiceTips([
+                    { icon: "✅", text: "再試行：続ける場合はもう一度ボタンを押す" },
+                    { icon: "⚠️", text: "権限：ブラウザのマイク設定を確認する" },
+                    { icon: "⚠️", text: "騒音：雑音が少ない場所で再開する" },
+                  ]);
                   recognitionStartedAt = null;
                 });
                 recognition.addEventListener("error", () => {
@@ -1151,17 +1150,11 @@
                     voiceGuide.textContent =
                       "周囲の雑音やマイク設定をご確認のうえ、再度お試しください。";
                   }
-                  if (voiceTips) {
-                    voiceTips.innerHTML = "";
-                    [
-                      "マイクの権限が拒否されていないか確認してください。",
-                      "認識が続かない場合はブラウザを再読み込みして再試行しましょう。",
-                    ].forEach((text) => {
-                      const item = document.createElement("li");
-                      item.textContent = text;
-                      voiceTips.appendChild(item);
-                    });
-                  }
+                  renderVoiceTips([
+                    { icon: "✅", text: "再試行：ページ再読み込み後にもう一度試す" },
+                    { icon: "⚠️", text: "権限：マイク拒否になっていないか確認する" },
+                    { icon: "⚠️", text: "騒音：ヘッドセット利用で認識率を上げる" },
+                  ]);
                   recognitionStartedAt = null;
                 });
               }
@@ -1175,17 +1168,11 @@
                   voiceGuide.textContent =
                     "マイクに向かって話してください。聞き取れない場合はもう一度押すと再開できます。";
                 }
-                if (voiceTips) {
-                  voiceTips.innerHTML = "";
-                  [
-                    "マイク許可のダイアログが出たら「許可」を選択してください。",
-                    "短い文で区切ると認識精度が上がります。",
-                  ].forEach((text) => {
-                    const item = document.createElement("li");
-                    item.textContent = text;
-                    voiceTips.appendChild(item);
-                  });
-                }
+                renderVoiceTips([
+                  { icon: "✅", text: "再試行：失敗時はボタンを押し直す" },
+                  { icon: "⚠️", text: "権限：マイク許可ダイアログで許可を選ぶ" },
+                  { icon: "⚠️", text: "騒音：短文で区切って話す" },
+                ]);
               }
             });
           }

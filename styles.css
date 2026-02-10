@@ -351,11 +351,23 @@ button {
 
 .voice-tips {
   margin: 0;
-  padding-left: 18px;
+  padding-left: 0;
+  list-style: none;
   color: var(--muted);
   display: grid;
   gap: 6px;
   font-size: 0.85rem;
+}
+
+.voice-tips li {
+  display: flex;
+  gap: 6px;
+  align-items: flex-start;
+}
+
+.voice-tip-icon {
+  width: 1.2em;
+  line-height: 1.2;
 }
 
 .tone-card {
