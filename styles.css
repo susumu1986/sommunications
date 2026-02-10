@@ -312,6 +312,22 @@ button {
   margin: 0;
 }
 
+.status-panel {
+  border: 1px solid #e0d7ff;
+  border-radius: 16px;
+  padding: 12px 14px;
+  background: #faf7ff;
+  display: grid;
+  gap: 6px;
+  font-size: 0.85rem;
+  color: var(--text);
+  font-weight: 600;
+}
+
+.status-panel p {
+  margin: 0;
+}
+
 .training-summary {
   margin: 0;
   padding: 8px 12px;

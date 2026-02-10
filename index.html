@@ -314,6 +314,11 @@
             <p class="practice-status" data-practice-status>
               入力内容に応じて返答と改善ポイントが更新されます。
             </p>
+            <div class="status-panel" data-status-panel>
+              <p>入力：待機中</p>
+              <p>確定：未更新</p>
+              <p>音声：未開始</p>
+            </div>
             <div class="practice-actions">
               <div class="tooltip-wrapper full-width">
                 <button class="primary full-width" type="button" data-practice-submit>
@@ -691,6 +696,7 @@
           };
           const toneTips = practiceCard.querySelector("[data-tone-tips]");
           const practiceStatus = practiceCard.querySelector("[data-practice-status]");
+          const statusPanel = practiceCard.querySelector("[data-status-panel]");
           const goalButtons = practiceCard.querySelectorAll("[data-goal]");
           const goalCriteria = practiceCard.querySelector("[data-goal-criteria]");
           const voiceToggle = practiceCard.querySelector("[data-voice-toggle]");
@@ -867,6 +873,25 @@
               "おすすめ：状況に合わせて「安心感づくり」か「次の約束づくり」を選びましょう。";
             recommendation.textContent = message;
           };
+          const updateStatusPanel = ({
+            inputStatus = "待機中",
+            commitStatus = "未更新",
+            voiceStatusText = "未開始",
+          } = {}) => {
+            if (!statusPanel) {
+              return;
+            }
+            const rows = statusPanel.querySelectorAll("p");
+            if (rows[0]) {
+              rows[0].textContent = `入力：${inputStatus}`;
+            }
+            if (rows[1]) {
+              rows[1].textContent = `確定：${commitStatus}`;
+            }
+            if (rows[2]) {
+              rows[2].textContent = `音声：${voiceStatusText}`;
+            }
+          };
 
           const updateTraining = () => {
             const activeGender =
@@ -993,6 +1018,7 @@
                 voiceGuide.textContent =
                   "音声入力に非対応のため、テキスト入力をご利用ください。";
               }
+              updateStatusPanel({ voiceStatusText: "非対応" });
               if (voiceTips) {
                 voiceTips.innerHTML = "";
                 ["推奨環境はChromeなどの対応ブラウザです。", "権限を許可できない場合はテキスト入力をご利用ください。"].forEach(
@@ -1078,6 +1104,7 @@
                 recognition.addEventListener("start", () => {
                   isListening = true;
                   voiceStatus.textContent = "音声入力: 受付中...";
+                  updateStatusPanel({ voiceStatusText: "受付中" });
                   if (voiceGuide) {
                     voiceGuide.textContent =
                       "話し終えたら自動で停止します。止まらない場合はもう一度押してください。";
@@ -1098,6 +1125,7 @@
                 recognition.addEventListener("end", () => {
                   isListening = false;
                   voiceStatus.textContent = "音声入力: 停止";
+                  updateStatusPanel({ voiceStatusText: "停止" });
                   if (voiceGuide) {
                     voiceGuide.textContent =
                       "必要に応じてもう一度「音声入力」を押して再開できます。";
@@ -1118,6 +1146,7 @@
                 recognition.addEventListener("error", () => {
                   isListening = false;
                   voiceStatus.textContent = "音声入力: エラーが発生しました";
+                  updateStatusPanel({ voiceStatusText: "エラー" });
                   if (voiceGuide) {
                     voiceGuide.textContent =
                       "周囲の雑音やマイク設定をご確認のうえ、再度お試しください。";
@@ -1141,6 +1170,7 @@
                 recognition.stop();
               } else {
                 recognition.start();
+                updateStatusPanel({ voiceStatusText: "受付中" });
                 if (voiceGuide) {
                   voiceGuide.textContent =
                     "マイクに向かって話してください。聞き取れない場合はもう一度押すと再開できます。";
@@ -1182,6 +1212,10 @@
                   ? "入力内容を反映して返答例を更新しました。"
                   : "入力が空でした。具体的な内容を入れると返答がさらに具体化されます。";
               }
+              updateStatusPanel({
+                inputStatus: inputText ? "入力済み" : "空欄",
+                commitStatus: "AI返答更新済み",
+              });
 
               if (copy.feedback && feedbackTips) {
                 feedbackTips.innerHTML = "";
@@ -1227,6 +1261,9 @@
                   ? "入力中の内容を反映して返答例を更新しています。"
                   : "入力が空です。具体的な内容を入れると返答がさらに具体化されます。";
               }
+              updateStatusPanel({
+                inputStatus: inputText ? "プレビュー更新中" : "空欄",
+              });
             });
           }
 
@@ -1249,6 +1286,7 @@
 
           updateGoalCriteria();
           updateTraining();
+          updateStatusPanel();
         }
       });
     </script>
