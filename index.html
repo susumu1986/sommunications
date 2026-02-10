@@ -266,6 +266,9 @@
                 </button>
               </div>
             </div>
+            <p class="scenario-recommendation" data-scenario-recommendation>
+              おすすめ：初対面は「安心感づくり」から始めると会話がスムーズです。
+            </p>
             <p class="scenario-note" data-scenario-text>
               初対面のぎこちなさをほぐすため、相手が安心できる質問から会話を始めましょう。
             </p>
@@ -770,6 +773,40 @@
                 "次の一歩：相手の反応が良かった話題を一つ拾って、もう少し掘り下げてみましょう。",
             },
           };
+          const scenarioRecommendationMap = {
+            "first-meet": {
+              comfort:
+                "おすすめ：初対面は「安心感づくり」から始めると会話がスムーズです。",
+              "next-step":
+                "おすすめ：初対面で距離を縮めたら「次の約束づくり」で次回につなげましょう。",
+              interest:
+                "おすすめ：初対面では「興味喚起」の質問で会話の糸口を作りましょう。",
+            },
+            reunion: {
+              comfort:
+                "おすすめ：再会時は「安心感づくり」で近況を共有すると自然に会話が進みます。",
+              "next-step":
+                "おすすめ：再会の流れで「次の約束づくり」を提案するとスムーズです。",
+              interest:
+                "おすすめ：久しぶりの再会は「興味喚起」で相手の変化を引き出しましょう。",
+            },
+            confession: {
+              comfort:
+                "おすすめ：好意を伝える場面では「安心感づくり」で相手の気持ちを尊重しましょう。",
+              "next-step":
+                "おすすめ：気持ちを伝えた後に「次の約束づくり」で次の行動を提案しましょう。",
+              interest:
+                "おすすめ：好意の理由を「興味喚起」で具体的に伝えると誠実さが伝わります。",
+            },
+            silence: {
+              comfort:
+                "おすすめ：気まずい沈黙は「安心感づくり」で空気を和らげましょう。",
+              "next-step":
+                "おすすめ：沈黙の後は「次の約束づくり」で話題をつなげると良いです。",
+              interest:
+                "おすすめ：沈黙時は「興味喚起」で相手が話しやすい話題を選びましょう。",
+            },
+          };
           const getActiveTrainingState = () => {
             const activeGender =
               practiceCard.querySelector("[data-training-gender].is-active")?.dataset
@@ -816,6 +853,19 @@
               actionHintMap?.[activeScenario]?.[activeGoal] ??
               "次の一歩：相手の答えやすい質問を1つ入れて、会話の流れを作りましょう。";
             feedbackAction.textContent = action;
+          };
+          const updateScenarioRecommendation = () => {
+            const recommendation = practiceCard.querySelector(
+              "[data-scenario-recommendation]",
+            );
+            if (!recommendation) {
+              return;
+            }
+            const { activeScenario, activeGoal } = getActiveTrainingState();
+            const message =
+              scenarioRecommendationMap?.[activeScenario]?.[activeGoal] ??
+              "おすすめ：状況に合わせて「安心感づくり」か「次の約束づくり」を選びましょう。";
+            recommendation.textContent = message;
           };
 
           const updateTraining = () => {
@@ -889,6 +939,7 @@
             });
             updateTrainingSummary();
             updateFeedbackAction();
+            updateScenarioRecommendation();
           };
 
           const updateGoalCriteria = () => {
@@ -930,6 +981,7 @@
               updateGoalCriteria();
               updateTrainingSummary();
               updateFeedbackAction();
+              updateScenarioRecommendation();
             });
           });
 

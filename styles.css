@@ -376,6 +376,13 @@ button {
   margin-top: 4px;
 }
 
+.scenario-recommendation {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--text);
+  font-weight: 600;
+}
+
 .input-toggle {
   display: flex;
   gap: 10px;
