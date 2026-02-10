@@ -558,6 +558,65 @@ body.compact-mode .practice-input {
   font-weight: 600;
 }
 
+.mission-card {
+  background: #fff;
+  border: 1px solid #e6dcff;
+  border-radius: 16px;
+  padding: 14px;
+  display: grid;
+  gap: 10px;
+}
+
+.mission-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
+
+.mission-progress {
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--muted);
+  font-weight: 600;
+}
+
+.mission-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 8px;
+}
+
+.mission-list li {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: 8px;
+  color: var(--text);
+}
+
+.mission-list li.is-done span {
+  color: var(--muted);
+  text-decoration: line-through;
+}
+
+.mission-check {
+  border: 1px solid #d8d0f4;
+  background: white;
+  color: var(--text);
+  border-radius: 999px;
+  padding: 2px 8px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.mission-list li.is-done .mission-check {
+  background: #ece3ff;
+  border-color: #b99bff;
+}
+
 .response-title {
   color: var(--text);
   font-weight: 700;

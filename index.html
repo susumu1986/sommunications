@@ -377,6 +377,26 @@
                 </p>
               </div>
             </div>
+            <div class="mission-card">
+              <div class="mission-header">
+                <p class="response-title">相談内容の実践ミッション</p>
+                <p class="mission-progress" data-mission-progress>0/3 完了</p>
+              </div>
+              <ul class="mission-list" data-mission-list>
+                <li>
+                  <button class="mission-check" type="button" data-mission-done>未完了</button>
+                  <span>相手が答えやすい質問を1つ入れて話し始める</span>
+                </li>
+                <li>
+                  <button class="mission-check" type="button" data-mission-done>未完了</button>
+                  <span>相手の返答に対して共感の一言を返す</span>
+                </li>
+                <li>
+                  <button class="mission-check" type="button" data-mission-done>未完了</button>
+                  <span>会話の最後に次の一歩を短く提案する</span>
+                </li>
+              </ul>
+            </div>
           </div>
         </div>
       </section>
@@ -713,6 +733,8 @@
           const practiceSubmit = practiceCard.querySelector("[data-practice-submit]");
           const speakButton = practiceCard.querySelector("[data-voice-speak]");
           const compactToggle = practiceCard.querySelector("[data-compact-toggle]");
+          const missionList = practiceCard.querySelector("[data-mission-list]");
+          const missionProgress = practiceCard.querySelector("[data-mission-progress]");
           const SpeechRecognition =
             window.SpeechRecognition || window.webkitSpeechRecognition;
           const hasSpeechRecognition = Boolean(SpeechRecognition);
@@ -828,6 +850,24 @@
                 "おすすめ：沈黙時は「興味喚起」で相手が話しやすい話題を選びましょう。",
             },
           };
+          const missionTemplateMap = {
+            "first-meet": [
+              "最初の一言は、相手が答えやすい質問から始める",
+              "返答を受けたら、短い共感フレーズを返す",
+            ],
+            reunion: [
+              "再会へのポジティブな気持ちを一言添える",
+              "近況を深掘りする質問を1つ入れる",
+            ],
+            confession: [
+              "相手の気持ちを尊重する言い回しに整える",
+              "好意を伝える理由を具体例で1つ補足する",
+            ],
+            silence: [
+              "沈黙を和らげる短い声かけを入れる",
+              "話題転換の質問を1つ用意して続ける",
+            ],
+          };
           const getActiveTrainingState = () => {
             const activeGender =
               practiceCard.querySelector("[data-training-gender].is-active")?.dataset
@@ -929,6 +969,47 @@
               rows[2].textContent = `音声：${voiceStatusText}`;
             }
           };
+          const updateMissionProgress = () => {
+            if (!missionList || !missionProgress) {
+              return;
+            }
+            const doneCount = missionList.querySelectorAll("li.is-done").length;
+            const totalCount = missionList.querySelectorAll("li").length;
+            missionProgress.textContent = `${doneCount}/${totalCount} 完了`;
+          };
+          const updatePracticeMissions = (inputText = "") => {
+            if (!missionList) {
+              return;
+            }
+            const { activeScenario } = getActiveTrainingState();
+            const baseMissions = missionTemplateMap[activeScenario] ?? [
+              "相手が答えやすい質問を1つ入れる",
+              "共感の一言を返して会話の流れを作る",
+            ];
+            const dynamicMission = !inputText
+              ? "まずは相談したい状況を1文入力する"
+              : inputText.length < 20
+                ? "入力内容にもう一文加えて状況を具体化する"
+                : !/[?？]/.test(inputText)
+                  ? "会話を続ける質問を1つ追加する"
+                  : "作った返答を実際に声に出して練習する";
+
+            const missionItems = [...baseMissions.slice(0, 2), dynamicMission];
+            missionList.innerHTML = "";
+            missionItems.forEach((text) => {
+              const item = document.createElement("li");
+              const button = document.createElement("button");
+              button.type = "button";
+              button.className = "mission-check";
+              button.dataset.missionDone = "";
+              button.textContent = "未完了";
+              const label = document.createElement("span");
+              label.textContent = text;
+              item.append(button, label);
+              missionList.appendChild(item);
+            });
+            updateMissionProgress();
+          };
           const renderVoiceTips = (tips) => {
             if (!voiceTips) {
               return;
@@ -1018,6 +1099,7 @@
             updateTrainingSummary();
             updateFeedbackAction(practiceInput?.value?.trim() ?? "");
             updateScenarioRecommendation();
+            updatePracticeMissions(practiceInput?.value?.trim() ?? "");
           };
 
           const updateGoalCriteria = () => {
@@ -1060,8 +1142,31 @@
               updateTrainingSummary();
               updateFeedbackAction(practiceInput?.value?.trim() ?? "");
               updateScenarioRecommendation();
+              updatePracticeMissions(practiceInput?.value?.trim() ?? "");
             });
           });
+
+          if (missionList) {
+            missionList.addEventListener("click", (event) => {
+              const target = event.target;
+              if (!(target instanceof HTMLElement)) {
+                return;
+              }
+              const checkButton = target.closest("[data-mission-done]");
+              if (!(checkButton instanceof HTMLButtonElement)) {
+                return;
+              }
+              const item = checkButton.closest("li");
+              if (!item) {
+                return;
+              }
+              item.classList.toggle("is-done");
+              checkButton.textContent = item.classList.contains("is-done")
+                ? "完了"
+                : "未完了";
+              updateMissionProgress();
+            });
+          }
 
           if (voiceToggle && practiceInput && voiceStatus) {
             if (!hasSpeechRecognition) {
@@ -1241,6 +1346,7 @@
                 commitStatus: "AI返答更新済み",
               });
               updateFeedbackAction(inputText);
+              updatePracticeMissions(inputText);
 
               if (copy.feedback && feedbackTips) {
                 feedbackTips.innerHTML = "";
@@ -1290,6 +1396,7 @@
                 inputStatus: inputText ? "プレビュー更新中" : "空欄",
               });
               updateFeedbackAction(inputText);
+              updatePracticeMissions(inputText);
             });
           }
 
