@@ -222,7 +222,12 @@
             </ul>
           </div>
           <div class="card practice-card">
-            <h3>AIとの対話シミュレーション</h3>
+            <div class="practice-card-header">
+              <h3>AIとの対話シミュレーション</h3>
+              <button class="compact-toggle" type="button" data-compact-toggle>
+                1画面表示: ON
+              </button>
+            </div>
             <div class="goal-selector" data-goal-group>
               <p class="scenario-title">目的を選択</p>
               <div class="option-buttons">
@@ -707,10 +712,19 @@
           const practiceInput = practiceCard.querySelector("#practice-text");
           const practiceSubmit = practiceCard.querySelector("[data-practice-submit]");
           const speakButton = practiceCard.querySelector("[data-voice-speak]");
+          const compactToggle = practiceCard.querySelector("[data-compact-toggle]");
           const SpeechRecognition =
             window.SpeechRecognition || window.webkitSpeechRecognition;
           const hasSpeechRecognition = Boolean(SpeechRecognition);
           const hasSpeechSynthesis = "speechSynthesis" in window;
+
+          document.body.classList.add("compact-mode");
+          if (compactToggle) {
+            compactToggle.addEventListener("click", () => {
+              const isCompact = document.body.classList.toggle("compact-mode");
+              compactToggle.textContent = isCompact ? "1画面表示: ON" : "1画面表示: OFF";
+            });
+          }
           let recognition = null;
           let isListening = false;
           let recognitionStartedAt = null;

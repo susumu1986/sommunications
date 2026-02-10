@@ -244,6 +244,27 @@ button {
   gap: 16px;
 }
 
+.practice-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.practice-card-header h3 {
+  margin: 0;
+}
+
+.compact-toggle {
+  border: 1px solid #d8d0f4;
+  background: #f6f2ff;
+  color: var(--text);
+  border-radius: 999px;
+  padding: 6px 12px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
 .goal-selector {
   display: grid;
   gap: 10px;
@@ -402,6 +423,28 @@ button {
   color: var(--muted);
   font-size: 0.92rem;
   margin-top: 4px;
+}
+
+body.compact-mode .practice-card {
+  gap: 10px;
+}
+
+body.compact-mode .goal-criteria,
+body.compact-mode .practice-action-note,
+body.compact-mode .voice-guide,
+body.compact-mode .voice-tips,
+body.compact-mode .tone-card,
+body.compact-mode .feedback-tips {
+  display: none;
+}
+
+body.compact-mode .status-panel,
+body.compact-mode .ai-response {
+  padding: 10px 12px;
+}
+
+body.compact-mode .practice-input {
+  min-height: 84px;
 }
 
 .scenario-recommendation {
