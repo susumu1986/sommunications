@@ -277,6 +277,11 @@
             <p class="voice-guide" data-voice-guide>
               音声入力を開始するには「音声入力」を押してください。聞き取りに失敗した場合はもう一度押すと再開できます。
             </p>
+            <ul class="voice-tips" data-voice-tips>
+              <li>聞き取りに失敗したら「音声入力」をもう一度押して再試行してください。</li>
+              <li>マイク許可が必要です。ブラウザの権限を確認してください。</li>
+              <li>周囲が騒がしい場合は、短い文で区切って話すと認識されやすくなります。</li>
+            </ul>
             <div class="tone-card" data-tone-card>
               <p class="response-title">音声トーン評価</p>
               <div class="tone-grid">
@@ -688,6 +693,7 @@
           const voiceToggle = practiceCard.querySelector("[data-voice-toggle]");
           const voiceStatus = practiceCard.querySelector("[data-voice-status]");
           const voiceGuide = practiceCard.querySelector("[data-voice-guide]");
+          const voiceTips = practiceCard.querySelector("[data-voice-tips]");
           const practiceInput = practiceCard.querySelector("#practice-text");
           const practiceSubmit = practiceCard.querySelector("[data-practice-submit]");
           const speakButton = practiceCard.querySelector("[data-voice-speak]");
@@ -935,6 +941,16 @@
                 voiceGuide.textContent =
                   "音声入力に非対応のため、テキスト入力をご利用ください。";
               }
+              if (voiceTips) {
+                voiceTips.innerHTML = "";
+                ["推奨環境はChromeなどの対応ブラウザです。", "権限を許可できない場合はテキスト入力をご利用ください。"].forEach(
+                  (text) => {
+                    const item = document.createElement("li");
+                    item.textContent = text;
+                    voiceTips.appendChild(item);
+                  },
+                );
+              }
               if (toneCard) {
                 toneCard.classList.add("is-disabled");
               }
@@ -1014,6 +1030,17 @@
                     voiceGuide.textContent =
                       "話し終えたら自動で停止します。止まらない場合はもう一度押してください。";
                   }
+                  if (voiceTips) {
+                    voiceTips.innerHTML = "";
+                    [
+                      "話している途中で止まる場合は、短い文に区切って話しましょう。",
+                      "聞き取りに失敗したら「音声入力」を押して再試行できます。",
+                    ].forEach((text) => {
+                      const item = document.createElement("li");
+                      item.textContent = text;
+                      voiceTips.appendChild(item);
+                    });
+                  }
                   recognitionStartedAt = Date.now();
                 });
                 recognition.addEventListener("end", () => {
@@ -1023,6 +1050,17 @@
                     voiceGuide.textContent =
                       "必要に応じてもう一度「音声入力」を押して再開できます。";
                   }
+                  if (voiceTips) {
+                    voiceTips.innerHTML = "";
+                    [
+                      "続けて話す場合は「音声入力」をもう一度押してください。",
+                      "うまく認識されないときはマイクの権限を確認しましょう。",
+                    ].forEach((text) => {
+                      const item = document.createElement("li");
+                      item.textContent = text;
+                      voiceTips.appendChild(item);
+                    });
+                  }
                   recognitionStartedAt = null;
                 });
                 recognition.addEventListener("error", () => {
@@ -1031,6 +1069,17 @@
                   if (voiceGuide) {
                     voiceGuide.textContent =
                       "周囲の雑音やマイク設定をご確認のうえ、再度お試しください。";
+                  }
+                  if (voiceTips) {
+                    voiceTips.innerHTML = "";
+                    [
+                      "マイクの権限が拒否されていないか確認してください。",
+                      "認識が続かない場合はブラウザを再読み込みして再試行しましょう。",
+                    ].forEach((text) => {
+                      const item = document.createElement("li");
+                      item.textContent = text;
+                      voiceTips.appendChild(item);
+                    });
                   }
                   recognitionStartedAt = null;
                 });
@@ -1043,6 +1092,17 @@
                 if (voiceGuide) {
                   voiceGuide.textContent =
                     "マイクに向かって話してください。聞き取れない場合はもう一度押すと再開できます。";
+                }
+                if (voiceTips) {
+                  voiceTips.innerHTML = "";
+                  [
+                    "マイク許可のダイアログが出たら「許可」を選択してください。",
+                    "短い文で区切ると認識精度が上がります。",
+                  ].forEach((text) => {
+                    const item = document.createElement("li");
+                    item.textContent = text;
+                    voiceTips.appendChild(item);
+                  });
                 }
               }
             });

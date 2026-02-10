@@ -333,6 +333,15 @@ button {
   color: var(--muted);
 }
 
+.voice-tips {
+  margin: 0;
+  padding-left: 18px;
+  color: var(--muted);
+  display: grid;
+  gap: 6px;
+  font-size: 0.85rem;
+}
+
 .tone-card {
   background: #f1ecff;
   border-radius: 16px;
