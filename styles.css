@@ -406,9 +406,29 @@ button {
 
 .scenario-recommendation {
   margin: 0;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid #e7d9ff;
+  background: linear-gradient(135deg, #fff6e9, #f4eeff);
+  display: flex;
+  gap: 8px;
+  align-items: center;
   font-size: 0.85rem;
   color: var(--text);
   font-weight: 600;
+}
+
+.recommendation-badge {
+  background: #8a63f8;
+  color: #fff;
+  border-radius: 999px;
+  padding: 2px 8px;
+  font-size: 0.75rem;
+  line-height: 1.4;
+}
+
+.recommendation-text {
+  flex: 1;
 }
 
 .input-toggle {

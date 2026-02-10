@@ -267,7 +267,8 @@
               </div>
             </div>
             <p class="scenario-recommendation" data-scenario-recommendation>
-              おすすめ：初対面は「安心感づくり」から始めると会話がスムーズです。
+              <span class="recommendation-badge">おすすめ</span>
+              <span class="recommendation-text">初対面は「安心感づくり」から始めると会話がスムーズです。</span>
             </p>
             <p class="scenario-note" data-scenario-text>
               初対面のぎこちなさをほぐすため、相手が安心できる質問から会話を始めましょう。
@@ -867,11 +868,18 @@
             if (!recommendation) {
               return;
             }
+            const recommendationText = recommendation.querySelector(
+              ".recommendation-text",
+            );
             const { activeScenario, activeGoal } = getActiveTrainingState();
             const message =
               scenarioRecommendationMap?.[activeScenario]?.[activeGoal] ??
-              "おすすめ：状況に合わせて「安心感づくり」か「次の約束づくり」を選びましょう。";
-            recommendation.textContent = message;
+              "状況に合わせて「安心感づくり」か「次の約束づくり」を選びましょう。";
+            if (recommendationText) {
+              recommendationText.textContent = message;
+            } else {
+              recommendation.textContent = `おすすめ：${message}`;
+            }
           };
           const updateStatusPanel = ({
             inputStatus = "待機中",
