@@ -246,23 +246,13 @@ button {
 
 .practice-card-header {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
   align-items: center;
   gap: 12px;
 }
 
 .practice-card-header h3 {
   margin: 0;
-}
-
-.compact-toggle {
-  border: 1px solid #d8d0f4;
-  background: #f6f2ff;
-  color: var(--text);
-  border-radius: 999px;
-  padding: 6px 12px;
-  font-size: 0.8rem;
-  font-weight: 600;
 }
 
 .goal-selector {
@@ -281,50 +271,6 @@ button {
 .practice-actions {
   display: grid;
   gap: 10px;
-}
-
-.practice-action-note {
-  margin: 0;
-  font-size: 0.85rem;
-  color: var(--muted);
-}
-
-.tooltip-wrapper {
-  position: relative;
-  display: inline-flex;
-}
-
-.tooltip-text {
-  position: absolute;
-  left: 50%;
-  bottom: calc(100% + 8px);
-  transform: translateX(-50%);
-  background: #2b2248;
-  color: #fff;
-  padding: 6px 10px;
-  border-radius: 8px;
-  font-size: 0.75rem;
-  white-space: nowrap;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.2s ease;
-  z-index: 2;
-}
-
-.tooltip-wrapper:hover .tooltip-text,
-.tooltip-wrapper:focus-within .tooltip-text {
-  opacity: 1;
-}
-
-.tooltip-text::after {
-  content: "";
-  position: absolute;
-  top: 100%;
-  left: 50%;
-  transform: translateX(-50%);
-  border-width: 6px;
-  border-style: solid;
-  border-color: #2b2248 transparent transparent transparent;
 }
 
 .practice-status {

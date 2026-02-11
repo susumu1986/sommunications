@@ -212,21 +212,35 @@
           <div>
             <h2>テキスト・音声入力でAIと対話練習</h2>
             <p class="section-lead">
-              入力内容に合わせてAIが臨機応変に返答し、複数の会話パターンを体験できます。フィードバックと改善ポイントを
-              受け取りながら、コミュニケーション能力を段階的に伸ばします。
+              相談→返答→実践の流れで、会話力を短時間で鍛えられます。
             </p>
             <ul class="practice-highlights">
-              <li>聞き返し・共感・提案などの応答パターンを切り替え</li>
-              <li>心理状態に合わせた返し方をシミュレーション</li>
-              <li>結果レポートで強みと改善点を可視化</li>
+              <li>まず「実践ミッション」から始めて、下の相談欄で試します</li>
             </ul>
           </div>
           <div class="card practice-card">
             <div class="practice-card-header">
               <h3>AIとの対話シミュレーション</h3>
-              <button class="compact-toggle" type="button" data-compact-toggle>
-                1画面表示: ON
-              </button>
+            </div>
+            <div class="mission-card">
+              <div class="mission-header">
+                <p class="response-title">まずは実践ミッション</p>
+                <p class="mission-progress" data-mission-progress>0/3 完了</p>
+              </div>
+              <ul class="mission-list" data-mission-list>
+                <li>
+                  <button class="mission-check" type="button" data-mission-done>未完了</button>
+                  <span>相手が答えやすい質問を1つ入れて話し始める</span>
+                </li>
+                <li>
+                  <button class="mission-check" type="button" data-mission-done>未完了</button>
+                  <span>相手の返答に対して共感の一言を返す</span>
+                </li>
+                <li>
+                  <button class="mission-check" type="button" data-mission-done>未完了</button>
+                  <span>会話の最後に次の一歩を短く提案する</span>
+                </li>
+              </ul>
             </div>
             <div class="goal-selector" data-goal-group>
               <p class="scenario-title">目的を選択</p>
@@ -284,7 +298,7 @@
             </div>
             <p class="voice-status" data-voice-status>音声入力: 未開始</p>
             <p class="voice-guide" data-voice-guide>
-              音声入力を開始するには「音声入力」を押してください。聞き取りに失敗した場合はもう一度押すと再開できます。
+              音声入力ボタンで開始・停止できます。
             </p>
             <ul class="voice-tips" data-voice-tips>
               <li><span class="voice-tip-icon">✅</span><span>再試行：うまく聞き取れない時はもう一度押す</span></li>
@@ -318,7 +332,7 @@
               placeholder="例：初めてのデートで緊張をほぐす会話をしたい"
             ></textarea>
             <p class="practice-status" data-practice-status>
-              入力内容に応じて返答と改善ポイントが更新されます。
+              入力したらすぐ下の返答が更新されます。
             </p>
             <div class="status-panel" data-status-panel>
               <p>入力：待機中</p>
@@ -326,19 +340,8 @@
               <p>音声：未開始</p>
             </div>
             <div class="practice-actions">
-              <div class="tooltip-wrapper full-width">
-                <button class="primary full-width" type="button" data-practice-submit>
-                  AIに相談する
-                </button>
-                <span class="tooltip-text" role="tooltip">
-                  クリックすると「AIからの返答例」が入力内容に合わせて更新されます。
-                </span>
-              </div>
-              <p class="practice-action-note">
-                「AIに相談する」を押すと、入力内容を反映した返答例が表示されます。
-              </p>
-              <button class="secondary full-width" type="button" data-voice-speak>
-                AIの返答を読み上げ
+              <button class="primary full-width" type="button" data-practice-submit>
+                AIに相談する
               </button>
             </div>
             <div class="ai-response">
@@ -377,26 +380,7 @@
                 </p>
               </div>
             </div>
-            <div class="mission-card">
-              <div class="mission-header">
-                <p class="response-title">相談内容の実践ミッション</p>
-                <p class="mission-progress" data-mission-progress>0/3 完了</p>
-              </div>
-              <ul class="mission-list" data-mission-list>
-                <li>
-                  <button class="mission-check" type="button" data-mission-done>未完了</button>
-                  <span>相手が答えやすい質問を1つ入れて話し始める</span>
-                </li>
-                <li>
-                  <button class="mission-check" type="button" data-mission-done>未完了</button>
-                  <span>相手の返答に対して共感の一言を返す</span>
-                </li>
-                <li>
-                  <button class="mission-check" type="button" data-mission-done>未完了</button>
-                  <span>会話の最後に次の一歩を短く提案する</span>
-                </li>
-              </ul>
-            </div>
+
           </div>
         </div>
       </section>
@@ -732,7 +716,6 @@
           const practiceInput = practiceCard.querySelector("#practice-text");
           const practiceSubmit = practiceCard.querySelector("[data-practice-submit]");
           const speakButton = practiceCard.querySelector("[data-voice-speak]");
-          const compactToggle = practiceCard.querySelector("[data-compact-toggle]");
           const missionList = practiceCard.querySelector("[data-mission-list]");
           const missionProgress = practiceCard.querySelector("[data-mission-progress]");
           const SpeechRecognition =
@@ -741,12 +724,6 @@
           const hasSpeechSynthesis = "speechSynthesis" in window;
 
           document.body.classList.add("compact-mode");
-          if (compactToggle) {
-            compactToggle.addEventListener("click", () => {
-              const isCompact = document.body.classList.toggle("compact-mode");
-              compactToggle.textContent = isCompact ? "1画面表示: ON" : "1画面表示: OFF";
-            });
-          }
           let recognition = null;
           let isListening = false;
           let recognitionStartedAt = null;
