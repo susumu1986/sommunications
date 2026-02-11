@@ -379,6 +379,32 @@
                   次の一歩：相手が答えやすい質問を1つ入れてから、自分の体験を短く添えてみましょう。
                 </p>
               </div>
+              <div class="feedback-card" data-nonverbal-feedback>
+                <p class="response-title">非言語スコア（メラビアン視点）</p>
+                <div class="feedback-grid">
+                  <div>
+                    <p class="feedback-label">表情（柔らかさ）</p>
+                    <p class="feedback-score" data-nonverbal-score="expression">4.2</p>
+                  </div>
+                  <div>
+                    <p class="feedback-label">姿勢/態度（落ち着き）</p>
+                    <p class="feedback-score" data-nonverbal-score="posture">4.1</p>
+                  </div>
+                  <div>
+                    <p class="feedback-label">雰囲気（親しみやすさ）</p>
+                    <p class="feedback-score" data-nonverbal-score="atmosphere">4.3</p>
+                  </div>
+                  <div>
+                    <p class="feedback-label">服装印象（TPO適合）</p>
+                    <p class="feedback-score" data-nonverbal-score="outfit">4.0</p>
+                  </div>
+                </div>
+                <ul class="feedback-tips" data-nonverbal-tips>
+                  <li>口角を少し上げて、第一印象の柔らかさを意識しましょう。</li>
+                  <li>相づちの前に一拍置くと、落ち着いた態度に見えます。</li>
+                  <li>シーンに合う清潔感ある服装を選ぶと安心感が高まります。</li>
+                </ul>
+              </div>
             </div>
 
           </div>
@@ -698,6 +724,14 @@
             tempo: practiceCard.querySelector("[data-feedback-score=\"tempo\"]"),
           };
           const feedbackTips = practiceCard.querySelector("[data-feedback-tips]");
+          const nonverbalFeedbackCard = practiceCard.querySelector("[data-nonverbal-feedback]");
+          const nonverbalScores = {
+            expression: practiceCard.querySelector("[data-nonverbal-score=\"expression\"]"),
+            posture: practiceCard.querySelector("[data-nonverbal-score=\"posture\"]"),
+            atmosphere: practiceCard.querySelector("[data-nonverbal-score=\"atmosphere\"]"),
+            outfit: practiceCard.querySelector("[data-nonverbal-score=\"outfit\"]"),
+          };
+          const nonverbalTips = practiceCard.querySelector("[data-nonverbal-tips]");
           const toneCard = practiceCard.querySelector("[data-tone-card]");
           const toneScores = {
             speed: practiceCard.querySelector("[data-tone-score=\"speed\"]"),
@@ -845,6 +879,40 @@
               "話題転換の質問を1つ用意して続ける",
             ],
           };
+          const nonverbalProfileMap = {
+            "first-meet": {
+              scores: { expression: 4.3, posture: 4.2, atmosphere: 4.4, outfit: 4.1 },
+              tips: [
+                "表情は口角を少し上げ、柔らかい第一印象を作りましょう。",
+                "背筋を伸ばし、話し始める前に一呼吸置くと落ち着いて見えます。",
+                "初対面では清潔感とTPOを優先した服装が安心感につながります。",
+              ],
+            },
+            reunion: {
+              scores: { expression: 4.4, posture: 4.3, atmosphere: 4.5, outfit: 4.2 },
+              tips: [
+                "再会時は笑顔のリアクションを少し大きめにすると親しみやすさが上がります。",
+                "うなずきを入れて、相手の近況を丁寧に受け止めましょう。",
+                "場面に合った服装トーンを合わせると会話が自然に進みます。",
+              ],
+            },
+            confession: {
+              scores: { expression: 4.1, posture: 4.4, atmosphere: 4.0, outfit: 4.3 },
+              tips: [
+                "真剣な場面では、視線を外しすぎず落ち着いた表情を意識しましょう。",
+                "姿勢は前傾しすぎず、丁寧な態度で安心感を作ります。",
+                "誠実さが伝わる清潔感のある服装を選ぶと印象が安定します。",
+              ],
+            },
+            silence: {
+              scores: { expression: 4.0, posture: 4.3, atmosphere: 4.1, outfit: 4.0 },
+              tips: [
+                "沈黙時は表情を固めず、やわらかい相づちで空気を保ちましょう。",
+                "姿勢を整え、慌てずに次の話題へつなぐ態度が有効です。",
+                "落ち着いた雰囲気の服装は場の緊張を和らげます。",
+              ],
+            },
+          };
           const getActiveTrainingState = () => {
             const activeGender =
               practiceCard.querySelector("[data-training-gender].is-active")?.dataset
@@ -987,6 +1055,39 @@
             });
             updateMissionProgress();
           };
+          const updateNonverbalFeedback = (inputText = "") => {
+            if (!nonverbalFeedbackCard) {
+              return;
+            }
+            const { activeScenario } = getActiveTrainingState();
+            const profile = nonverbalProfileMap[activeScenario] ?? nonverbalProfileMap["first-meet"];
+            const adjustedScores = { ...profile.scores };
+            const extraTips = [];
+            if (inputText && inputText.length < 20) {
+              adjustedScores.posture = Math.max(3.6, adjustedScores.posture - 0.2);
+              extraTips.push("話す前に内容を1文追加して、落ち着いた態度で伝えましょう。");
+            }
+            if (inputText && !/[?？]/.test(inputText)) {
+              adjustedScores.atmosphere = Math.max(3.6, adjustedScores.atmosphere - 0.2);
+              extraTips.push("質問を1つ入れると、親しみやすい雰囲気が作りやすくなります。");
+            }
+
+            Object.entries(adjustedScores).forEach(([key, value]) => {
+              const target = nonverbalScores[key];
+              if (target) {
+                target.textContent = value.toFixed(1);
+              }
+            });
+
+            if (nonverbalTips) {
+              nonverbalTips.innerHTML = "";
+              [...profile.tips, ...extraTips].forEach((tip) => {
+                const item = document.createElement("li");
+                item.textContent = tip;
+                nonverbalTips.appendChild(item);
+              });
+            }
+          };
           const renderVoiceTips = (tips) => {
             if (!voiceTips) {
               return;
@@ -1077,6 +1178,7 @@
             updateFeedbackAction(practiceInput?.value?.trim() ?? "");
             updateScenarioRecommendation();
             updatePracticeMissions(practiceInput?.value?.trim() ?? "");
+            updateNonverbalFeedback(practiceInput?.value?.trim() ?? "");
           };
 
           const updateGoalCriteria = () => {
@@ -1120,6 +1222,7 @@
               updateFeedbackAction(practiceInput?.value?.trim() ?? "");
               updateScenarioRecommendation();
               updatePracticeMissions(practiceInput?.value?.trim() ?? "");
+              updateNonverbalFeedback(practiceInput?.value?.trim() ?? "");
             });
           });
 
@@ -1324,6 +1427,7 @@
               });
               updateFeedbackAction(inputText);
               updatePracticeMissions(inputText);
+              updateNonverbalFeedback(inputText);
 
               if (copy.feedback && feedbackTips) {
                 feedbackTips.innerHTML = "";
@@ -1374,6 +1478,7 @@
               });
               updateFeedbackAction(inputText);
               updatePracticeMissions(inputText);
+              updateNonverbalFeedback(inputText);
             });
           }
 
